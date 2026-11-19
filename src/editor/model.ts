@@ -352,3 +352,10 @@ export function validateDraft(draft: Draft, index?: ContentIndex): DraftIssue[] 
   }
   return issues;
 }
+
+/** 何も入力していない下書きか（掲載日の初期値などは入力とみなさない） */
+export function isDraftEmpty(draft: Draft, today = ''): boolean {
+  if (draft.slug.trim() !== '' || draft.body.trim() !== '') return false;
+  const blank = emptyDraft(draft.kind, today);
+  return JSON.stringify(toFrontmatter(draft)) === JSON.stringify(toFrontmatter(blank));
+}

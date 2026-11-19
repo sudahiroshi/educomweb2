@@ -7,6 +7,7 @@ import {
   emptyDraft,
   emptySession,
   emptyTalk,
+  isDraftEmpty,
   toFrontmatter,
   validateDraft,
   type Draft,
@@ -198,5 +199,18 @@ describe('検査（サイトと同じ規則）', () => {
     d.page.title = 't';
     d.body = '本文';
     expect(validateDraft(d, index).some((i) => i.message.includes('サイトが使うパス'))).toBe(true);
+  });
+});
+
+describe('入力中かどうか', () => {
+  test('初期値だけなら空、何か入れたら空でない', () => {
+    expect(isDraftEmpty(emptyDraft('news', '2026-11-19'), '2026-11-19')).toBe(true);
+    expect(isDraftEmpty(emptyDraft('committee', '2026-11-19'), '2026-11-19')).toBe(true);
+    const d = emptyDraft('news', '2026-11-19');
+    d.news.title = 'a';
+    expect(isDraftEmpty(d, '2026-11-19')).toBe(false);
+    const b = emptyDraft('pages');
+    b.body = '本文';
+    expect(isDraftEmpty(b)).toBe(false);
   });
 });

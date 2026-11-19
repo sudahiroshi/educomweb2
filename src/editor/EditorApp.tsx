@@ -21,6 +21,7 @@ import {
   draftId,
   draftPath,
   emptyDraft,
+  isDraftEmpty,
   newKey,
   validateDraft,
   type Draft,
@@ -28,6 +29,7 @@ import {
 import { Preview } from './Preview';
 import { OutputPanel } from './OutputPanel';
 import { GitHubActions } from './GitHubActions';
+import { LoadPanel } from './LoadPanel';
 import { toMarkdown } from './serialize';
 import { useNarrow, PaneTabs } from './PaneTabs';
 import { BODY_REQUIRED } from '../schemas';
@@ -185,6 +187,19 @@ export default function EditorApp() {
     }
   }
 
+  function replaceDraft(next: Draft, message: string): boolean {
+    if (
+      (!isDraftEmpty(draft, today) || attachments.length > 0) &&
+      !window.confirm('入力中の内容は消えます。よろしいですか？')
+    )
+      return false;
+    attachments.forEach((a) => URL.revokeObjectURL(a.url));
+    setAttachments([]);
+    setDraft(next);
+    setMessage(message);
+    return true;
+  }
+
   function changeKind(kind: EditorKind) {
     update((d) => ({ ...d, kind }));
   }
@@ -209,6 +224,33 @@ export default function EditorApp() {
             ))}
           </div>
         </fieldset>
+
+        <div class="ed-actions" role="group" aria-label="操作">
+          <button
+            type="button"
+            class="ed-button"
+            onClick={() =>
+              replaceDraft(emptyDraft(draft.kind, today), '新しい記事を書き始めます。')
+            }
+          >
+            新規作成
+          </button>
+        </div>
+        <LoadPanel
+          index={index}
+          onLoad={(d, source) => {
+            // ファイル名だけで読み込んだ場合も、既存記事一覧に同じ ID があれば、その記事の修正として扱う
+            const existing = d.loadedPath
+              ? undefined
+              : index?.entries.find(
+                  (e) => e.collection === collectionOf(d.kind) && e.id === draftId(d),
+                );
+            replaceDraft(
+              existing ? { ...d, loadedPath: existing.path } : d,
+              `${source} を読み込みました。`,
+            );
+          }}
+        />
 
         <p class="ed-status" role="status">
           {message}

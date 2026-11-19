@@ -587,3 +587,53 @@
   flex-direction: column;
   gap: 0.4rem;
 }
+
+/* ---- 既存記事の読み込み ---- */
+.ed-load {
+  padding: 0.5rem 1rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.ed-load summary {
+  min-height: var(--tap-size);
+  padding-block: 0.6rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ed-load-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-block: 0.5rem 1rem;
+}
+
+.ed-drop {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-small);
+}
+
+.ed-drop-active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.ed-strong {
+  font-weight: 700;
+}
+
+.editor select {
+  width: 100%;
+  min-height: var(--tap-size);
+  padding: 0.4rem 0.6rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
