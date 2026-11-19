@@ -45,7 +45,8 @@ function visuallyHidden(text: string): Element {
   return {
     type: 'element',
     tagName: 'span',
-    properties: { className: ['visually-hidden'] },
+    // 読み上げ用の補足はサイト内検索の索引に入れない
+    properties: { className: ['visually-hidden'], dataPagefindIgnore: '' },
     children: [{ type: 'text', value: text }],
   };
 }

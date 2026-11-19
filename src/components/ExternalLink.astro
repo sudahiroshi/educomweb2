@@ -29,5 +29,7 @@ const { href, class: className, ...rest } = Astro.props;
       <path d={d} />
     ))}
   </svg>
-  <span class="visually-hidden">{EXTERNAL_LABEL}</span>
+  <span class="visually-hidden" data-pagefind-ignore>
+    {EXTERNAL_LABEL}
+  </span>
 </a>

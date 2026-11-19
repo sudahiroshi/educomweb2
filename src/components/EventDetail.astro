@@ -25,6 +25,7 @@ const hasBody = (entry.body ?? '').trim() !== '';
 ---
 
 <PageLayout
+  searchable
   title={data.title}
   breadcrumbs={[
     { label: kindListTitle(data.kind), href: kindListUrl(data.kind) },

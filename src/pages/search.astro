@@ -1,0 +1,55 @@
+---
+/**
+ * サイト内検索（spec 7章、D-52）。Pagefind の Component UI を使う（WAI-ARIA 対応、日本語の文言あり）。
+ * 索引はビルド後に pagefind が dist/pagefind/ に作る（npm run build）。開発サーバーでは動かない。
+ * 対象はお知らせ・記事詳細・運営委員（年度別）・その他のページ（各ページの data-pagefind-body）。
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout title="サイト内検索" description="日本音響学会 音響教育委員会のサイト内を検索します。">
+  <link slot="head" rel="stylesheet" href="/pagefind/pagefind-component-ui.css" />
+  <div class="search">
+    <pagefind-config lang="ja"></pagefind-config>
+    <pagefind-input></pagefind-input>
+    <pagefind-summary></pagefind-summary>
+    <pagefind-results></pagefind-results>
+  </div>
+  <noscript>
+    <p>検索には JavaScript を有効にしてください。</p>
+  </noscript>
+  <script is:inline type="module" src="/pagefind/pagefind-component-ui.js"></script>
+</PageLayout>
+
+<style>
+  /* Pagefind の画面をサイトの色・文字に合わせる（色は --color-* のみ。影は使わない） */
+  .search {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 46rem;
+    --pf-text: var(--color-text);
+    --pf-text-secondary: var(--color-muted);
+    --pf-text-muted: var(--color-muted);
+    --pf-background: var(--color-surface);
+    --pf-border: var(--color-border);
+    --pf-border-focus: var(--color-accent);
+    --pf-hover: var(--color-accent-soft);
+    /* 抜粋は控えめな色、一致した語は本文の色（Pagefind の --pf-mark は文字色） */
+    --pf-mark: var(--color-text);
+    --pf-outline-focus: var(--color-focus);
+    --pf-outline-width: var(--focus-width);
+    --pf-outline-offset: 2px;
+    --pf-shadow-sm: none;
+    --pf-shadow-md: none;
+    --pf-shadow-lg: none;
+    --pf-scroll-shadow: transparent;
+    --pf-font: var(--font-sans);
+    --pf-input-height: 3rem;
+    --pf-input-font-size: 1rem;
+    --pf-summary-font-size: var(--font-size-small);
+    --pf-result-title-font-size: var(--font-size-h3);
+    --pf-result-excerpt-font-size: 0.95rem;
+    --pf-border-radius: var(--radius-small);
+  }
+</style>
