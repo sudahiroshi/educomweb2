@@ -1,0 +1,8 @@
+/*
+ * Zen Kaku Gothic New（400 / 500 / 700、spec 5.2）。
+ * T-12 既定案: Google Fonts を使わずサイト内に置く（@fontsource、OFL-1.1）。
+ * 文字範囲ごとに分割されたファイルで、ページに含まれる文字のファイルだけが読み込まれる。
+ */
+@import '@fontsource/zen-kaku-gothic-new/400.css';
+@import '@fontsource/zen-kaku-gothic-new/500.css';
+@import '@fontsource/zen-kaku-gothic-new/700.css';
