@@ -13,6 +13,8 @@ import { rawUrl } from './github';
 import { importMarkdown } from './import';
 import { collectionOf, EDITOR_KINDS, kindLabel, type EditorKind } from './kinds';
 import { draftId, draftPath, emptyDraft, validateDraft, type Draft } from './model';
+import { Preview } from './Preview';
+import { useNarrow, PaneTabs } from './PaneTabs';
 import { BODY_REQUIRED } from '../schemas';
 import './editor.css';
 
@@ -21,6 +23,10 @@ export default function EditorApp() {
   const [index, setIndex] = useState<ContentIndex | null>(null);
   const [message, setMessage] = useState('');
   const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const [today] = useState(() => todayInTokyo());
+  // 幅の狭い画面では「入力」「プレビュー」をタブで切り替える（spec 6.2）
+  const narrow = useNarrow();
+  const [pane, setPane] = useState<'form' | 'preview'>('form');
 
   // 既存記事一覧（spec 3.8）
   useEffect(() => {
@@ -89,8 +95,15 @@ export default function EditorApp() {
           {message}
         </p>
 
+        {narrow && <PaneTabs value={pane} onChange={setPane} />}
         <div class="ed-columns">
-          <section class="ed-form" aria-labelledby="ed-form-title">
+          <section
+            class="ed-form"
+            aria-labelledby="ed-form-title"
+            id="ed-pane-form"
+            role={narrow ? 'tabpanel' : undefined}
+            hidden={narrow && pane !== 'form'}
+          >
             <h2 id="ed-form-title">入力（{kindLabel(draft.kind)}）</h2>
             {collection !== 'committee' && (
               <TextField
@@ -139,9 +152,15 @@ export default function EditorApp() {
               }
             />
           </section>
-          <section class="ed-preview" aria-labelledby="ed-preview-title">
+          <section
+            class="ed-preview"
+            aria-labelledby="ed-preview-title"
+            id="ed-pane-preview"
+            role={narrow ? 'tabpanel' : undefined}
+            hidden={narrow && pane !== 'preview'}
+          >
             <h2 id="ed-preview-title">プレビュー</h2>
-            <p class="ed-muted">（plan 8.5 で追加）</p>
+            <Preview draft={draft} index={index} today={today} />
           </section>
         </div>
 

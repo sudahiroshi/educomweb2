@@ -3,9 +3,9 @@
 import { render, type CollectionEntry } from 'astro:content';
 import { formatFiscalYear } from '../lib/fiscal-year';
 import FiscalYearNav from './FiscalYearNav.astro';
-import MemberTable from './MemberTable.astro';
+import { MemberTable } from './ui/MemberTable';
 import Prose from './Prose.astro';
-import PublishedDates from './PublishedDates.astro';
+import { PublishedDates } from './ui/PublishedDates';
 
 interface Props {
   entry: CollectionEntry<'committee'>;

@@ -7,11 +7,14 @@
   gap: 1.25rem;
 }
 
-.editor h2 {
+/* 編集画面の見出し（プレビューの中の見出しには当てない） */
+.ed-form > h2,
+.ed-preview > h2,
+.ed-issues > h2 {
   font-size: var(--font-size-h3);
 }
 
-.editor h3 {
+.ed-session-head h3 {
   font-size: 1rem;
 }
 
@@ -44,7 +47,7 @@
 
 .ed-columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 32rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr));
   gap: 1.5rem;
   align-items: start;
 }
@@ -356,4 +359,127 @@
 .ed-toolbar-button {
   padding: 0.2rem 0.8rem;
   font-size: var(--font-size-small);
+}
+
+/* ---- プレビュー ---- */
+.ed-preview-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.ed-preview-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ed-segment {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.15rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+.ed-segment-label {
+  padding-inline: 0.5rem 0.2rem;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.ed-segment button {
+  min-width: var(--tap-size);
+  min-height: var(--tap-size);
+  padding: 0.2rem 0.7rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ed-segment button[aria-pressed='true'] {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* プレビューの枠：data-theme でサイトの色を切り替え、zoom で文字サイズを再現する */
+.ed-preview-canvas {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 1.25rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: var(--line-height-body);
+}
+
+.ed-preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.ed-preview-section + .ed-preview-section {
+  padding-top: 1.25rem;
+  border-top: var(--border-width) dashed var(--color-border);
+}
+
+.ed-preview-caption {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.ed-preview-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ed-preview-canvas .page-title {
+  font-size: 1.8rem;
+}
+
+.ed-preview-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---- 狭い画面のタブ ---- */
+.ed-tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.ed-tabs button {
+  min-height: var(--tap-size);
+  padding: 0.3rem 1.2rem;
+  border: var(--border-width) solid var(--color-border);
+  border-bottom: 0;
+  border-radius: var(--radius-small) var(--radius-small) 0 0;
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ed-tabs button[aria-selected='true'] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
 }

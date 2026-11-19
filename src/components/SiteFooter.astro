@@ -4,7 +4,7 @@
  * T-23 既定案: 日本音響学会へのリンク、サイト内検索、RSS、著作権表示のみ（問い合わせ先は載せない）
  */
 import { site } from '../config/site';
-import ExternalLink from './ExternalLink.astro';
+import { ExternalLink } from './ui/ExternalLink';
 ---
 
 <footer class="site-footer">
@@ -48,14 +48,15 @@ import ExternalLink from './ExternalLink.astro';
     list-style: none;
   }
 
-  .footer-links a {
+  /* 外部リンクは Preact の部品（ExternalLink）なので :global で当てる */
+  .footer-links :global(a) {
     display: inline-flex;
     align-items: center;
     min-height: var(--tap-size);
     color: var(--color-muted);
   }
 
-  .footer-links a:hover {
+  .footer-links :global(a:hover) {
     color: var(--color-accent);
   }
 </style>

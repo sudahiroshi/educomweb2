@@ -5,14 +5,13 @@
  */
 import { render } from 'astro:content';
 import type { EventEntry } from '../lib/queries';
-import { formatEventDate } from '../lib/format-date';
 import { kindListTitle, kindListUrl } from '../lib/event-kind';
 import { summarize } from '../lib/summary';
 import PageLayout from '../layouts/PageLayout.astro';
-import KindBadge from './KindBadge.astro';
-import LinkList from './LinkList.astro';
+import { KindBadge } from './ui/KindBadge';
+import { EventInfo, EventLinks, EventProgram } from './ui/EventSections';
 import Prose from './Prose.astro';
-import PublishedDates from './PublishedDates.astro';
+import { PublishedDates } from './ui/PublishedDates';
 
 interface Props {
   entry: EventEntry;
@@ -36,33 +35,11 @@ const hasBody = (entry.body ?? '').trim() !== '';
 >
   <KindBadge slot="before-title" kind={data.kind} variant="text" />
 
-  <dl class="info">
-    <div>
-      <dt>開催日</dt>
-      <dd>
-        <time datetime={data.startDate}>{formatEventDate(data.startDate, data.endDate)}</time>
-      </dd>
-    </div>
-    {data.venue && (
-      <div>
-        <dt>会場</dt>
-        <dd>{data.venue}</dd>
-      </div>
-    )}
-  </dl>
+  <EventInfo data={data} />
+  <EventLinks data={data} />
+  <EventProgram data={data} />
 
-  {data.links && data.links.length > 0 && (
-    <section aria-labelledby="links-title">
-      <h2 id="links-title" class="section-title">
-        関連リンク
-      </h2>
-      <LinkList links={data.links} />
-    </section>
-  )}
-
-  {/* spec 4.1 の順：セッション表（slot）→ 本文 */}
-  <slot />
-
+  {/* spec 4.1 の順：セッション表 → 本文 */}
   {hasBody && (
     <Prose>
       <Content />
@@ -71,37 +48,3 @@ const hasBody = (entry.body ?? '').trim() !== '';
 
   <PublishedDates published={data.published} updated={data.updated} />
 </PageLayout>
-
-<style>
-  .info {
-    display: grid;
-    gap: 0.5rem;
-    max-width: 46rem;
-    margin: 0;
-    padding: 1rem 1.25rem;
-    border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius-card);
-    background: var(--color-surface);
-  }
-
-  .info div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 1rem;
-  }
-
-  .info dt {
-    min-width: 4em;
-    color: var(--color-muted);
-    font-weight: 700;
-    white-space: nowrap;
-  }
-
-  .info dd {
-    margin: 0;
-  }
-
-  .section-title {
-    font-size: var(--font-size-h2);
-  }
-</style>

@@ -4,7 +4,7 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection, render } from 'astro:content';
 import PageLayout from '../layouts/PageLayout.astro';
 import Prose from '../components/Prose.astro';
-import PublishedDates from '../components/PublishedDates.astro';
+import { PublishedDates } from '../components/ui/PublishedDates';
 import { summarize } from '../lib/summary';
 
 export const getStaticPaths = (async () => {

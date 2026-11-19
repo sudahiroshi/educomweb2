@@ -1,7 +1,7 @@
 // 開発用：全ページの横はみ出し・欠けを点検する（spec 5.5・8章、plan 5.4）
 // ビルド結果（dist/）のページを、プレビューサーバー経由で開いて調べる。
 // - ページ全体の横スクロール（scrollWidth > clientWidth）
-// - 表示幅の外にはみ出した要素（横スクロール枠 .table-scroll などの中は除く）
+// - 表示幅の外にはみ出した要素（横スクロール枠＝role="region" かつ tabindex="0" の領域・pre の中は除く）
 // 使い方: npm run build && npx astro preview --port 4329 を起動した状態で
 //   node tools/dev/check-overflow.mjs [幅=320] [文字サイズ=xlarge] [テーマ=light] [--menu]
 import { readdirSync } from 'node:fs';
@@ -49,10 +49,11 @@ for (const path of paths) {
   const result = await page.evaluate(() => {
     const doc = document.documentElement;
     const vw = doc.clientWidth;
-    const scrollers = (el) => el.closest('.table-scroll, pre, [data-scroll-x]');
+    const SCROLLER = '[role="region"][tabindex="0"], pre';
+    const scrollers = (el) => el.closest(SCROLLER);
     const offenders = [];
     for (const el of document.body.querySelectorAll('*')) {
-      if (scrollers(el) && !el.matches('.table-scroll, pre, [data-scroll-x]')) continue;
+      if (scrollers(el) && !el.matches(SCROLLER)) continue;
       const style = getComputedStyle(el);
       if (style.display === 'none' || style.visibility === 'hidden') continue;
       if (el.closest('.visually-hidden, .sr-only, .skip-link')) continue;

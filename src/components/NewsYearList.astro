@@ -5,7 +5,7 @@
 import type { NewsEntry } from '../lib/queries';
 import { formatFiscalYear } from '../lib/fiscal-year';
 import FiscalYearNav from './FiscalYearNav.astro';
-import NewsListItem from './NewsListItem.astro';
+import { NewsListItem } from './ui/NewsListItem';
 
 interface Props {
   /** 表示する年度（お知らせが1件もなければ undefined） */

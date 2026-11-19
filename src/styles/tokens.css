@@ -2,8 +2,10 @@
  * デザイントークン（spec 5.1〜5.3、案B「音のモチーフ」）。
  * 色はここで定義した --color-* だけを使い、値を直接書かない。
  * ダークは [data-theme="dark"] で上書きする（spec 5.4）。
+ * [data-theme="light"] は、ダーク表示のページの中で一部だけライトにする（編集画面のプレビュー）ために付ける。
  */
-:root {
+:root,
+[data-theme='light'] {
   /* 色（ライト） */
   --color-bg: #fdfdfb;
   --color-surface: #ffffff;

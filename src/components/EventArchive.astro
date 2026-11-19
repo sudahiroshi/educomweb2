@@ -10,8 +10,8 @@ import type { EventEntry } from '../lib/queries';
 import { listingFiscalYear } from '../lib/event-status';
 import { fiscalYearOf, formatFiscalYear } from '../lib/fiscal-year';
 import { buildToday } from '../lib/queries';
-import EventCard from './EventCard.astro';
-import EventListItem from './EventListItem.astro';
+import { EventCard } from './ui/EventCard';
+import { EventListItem } from './ui/EventListItem';
 import EventStatusScript from './EventStatusScript.astro';
 import FiscalYearNav from './FiscalYearNav.astro';
 
@@ -44,7 +44,7 @@ const ended = shownYear === undefined ? [] : (events.endedByFiscalYear.get(shown
       <ul class="card-grid" data-upcoming-list>
         {events.upcoming.map((e) => (
           <li>
-            <EventCard event={e} />
+            <EventCard event={e} today={buildToday} />
             {/* 閲覧時に終了していたとき、終了リストへ移す一覧行（spec 3.3） */}
             <template data-ended-template>
               <EventListItem event={e} showKind={showKind} />

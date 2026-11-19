@@ -4,8 +4,8 @@ import type { GetStaticPaths } from 'astro';
 import { getEntries, render } from 'astro:content';
 import PageLayout from '../../layouts/PageLayout.astro';
 import Prose from '../../components/Prose.astro';
-import EventListItem from '../../components/EventListItem.astro';
-import PublishedDates from '../../components/PublishedDates.astro';
+import { RelatedEvents } from '../../components/ui/RelatedEvents';
+import { PublishedDates } from '../../components/ui/PublishedDates';
 import { loadNews } from '../../lib/queries';
 import { compareEnded } from '../../lib/sort';
 import { summarize } from '../../lib/summary';
@@ -36,35 +36,5 @@ const related = entry.data.related ? (await getEntries(entry.data.related)).sort
   <Prose>
     <Content />
   </Prose>
-  {related.length > 0 && (
-    <section class="related" aria-labelledby="related-title">
-      <h2 id="related-title">関連記事</h2>
-      <ul>
-        {related.map((e) => (
-          <EventListItem event={e} />
-        ))}
-      </ul>
-    </section>
-  )}
+  <RelatedEvents events={related} />
 </PageLayout>
-
-<style>
-  .related {
-    max-width: 46rem;
-    margin-top: 1rem;
-    padding: 1.25rem 1.5rem 0.5rem;
-    border: var(--border-width) solid var(--color-border);
-    border-radius: var(--radius-card);
-    background: var(--color-surface);
-  }
-
-  .related h2 {
-    font-size: var(--font-size-h3);
-  }
-
-  .related ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-</style>

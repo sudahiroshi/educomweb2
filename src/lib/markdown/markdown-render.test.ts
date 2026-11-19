@@ -8,20 +8,26 @@
 import { readFileSync } from 'node:fs';
 import { beforeAll, describe, expect, test } from 'vitest';
 import { markdownConfig } from './config';
+import { renderMarkdown } from './render';
 
 let html = '';
+let source = '';
 
 beforeAll(async () => {
   const renderer = await markdownConfig.processor.createRenderer({
     syntaxHighlight: markdownConfig.syntaxHighlight,
   });
-  const source = readFileSync(new URL('./fixtures/sample.md', import.meta.url), 'utf8');
+  source = readFileSync(new URL('./fixtures/sample.md', import.meta.url), 'utf8');
   html = (await renderer.render(source)).code;
 });
 
 describe('Markdown の変換', () => {
   test('結果全体が固定した内容と一致する', async () => {
     await expect(html).toMatchFileSnapshot('./__snapshots__/sample.html');
+  });
+
+  test('編集画面のプレビュー（ブラウザの変換）がビルドと同じ HTML になる（spec 6.4）', () => {
+    expect(renderMarkdown(source)).toBe(html);
   });
 
   test('危険な HTML は無害化される（spec 6.4）', () => {

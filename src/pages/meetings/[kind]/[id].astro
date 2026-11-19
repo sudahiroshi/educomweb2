@@ -1,9 +1,8 @@
 ---
-/** 記事詳細（研究発表会・国際会議）（spec 4.1）：セッション表を含む */
+/** 記事詳細（研究発表会・国際会議）（spec 4.1）。セッション表は EventDetail が表示する */
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import EventDetail from '../../../components/EventDetail.astro';
-import SessionTable from '../../../components/SessionTable.astro';
 
 export const getStaticPaths = (async () => {
   const events = await getCollection('events', (e) => e.data.kind !== 'activity');
@@ -14,26 +13,6 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { entry } = Astro.props;
-const sessions = entry.data.sessions ?? [];
 ---
 
-<EventDetail entry={entry}>
-  {sessions.length > 0 && (
-    <section class="program" aria-labelledby="program-title">
-      <h2 id="program-title">プログラム</h2>
-      <SessionTable sessions={sessions} />
-    </section>
-  )}
-</EventDetail>
-
-<style>
-  .program {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .program h2 {
-    font-size: var(--font-size-h2);
-  }
-</style>
+<EventDetail entry={entry} />

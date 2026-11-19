@@ -1,0 +1,43 @@
+/**
+ * 外部リンク（spec 8章）。アイコンと読み上げ用の「（外部サイト）」を付ける。
+ * Markdown 本文の外部リンク（rehype-site）と同じ見た目・同じ文言にする。
+ */
+import type { ComponentChildren } from 'preact';
+import { EXTERNAL_ICON_PATHS, EXTERNAL_LABEL } from '../../lib/markdown/external';
+
+export function ExternalLink({
+  href,
+  class: className,
+  children,
+}: {
+  href: string;
+  class?: string;
+  children: ComponentChildren;
+}) {
+  return (
+    <a href={href} class={['external-link', className].filter(Boolean).join(' ')}>
+      {children}
+      <svg
+        class="external-icon"
+        viewBox="0 0 24 24"
+        width="1em"
+        height="1em"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"
+      >
+        {EXTERNAL_ICON_PATHS.map((d) => (
+          <path key={d} d={d} />
+        ))}
+      </svg>
+      {/* 読み上げ用の補足はサイト内検索の索引に入れない */}
+      <span class="visually-hidden" data-pagefind-ignore="">
+        {EXTERNAL_LABEL}
+      </span>
+    </a>
+  );
+}
