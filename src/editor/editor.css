@@ -346,3 +346,14 @@
 .ed-status:empty {
   display: none;
 }
+
+.ed-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ed-toolbar-button {
+  padding: 0.2rem 0.8rem;
+  font-size: var(--font-size-small);
+}

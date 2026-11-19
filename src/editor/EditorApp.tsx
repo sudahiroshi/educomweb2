@@ -7,6 +7,7 @@ import { todayInTokyo } from '../lib/date';
 import type { ContentIndex } from './content-index';
 import { fieldId, IssuesContext, issuesMap, TextField } from './fields';
 import { BodyEditor } from './forms/BodyEditor';
+import { FormatToolbar } from './forms/FormatToolbar';
 import { KindForm } from './forms/KindForm';
 import { rawUrl } from './github';
 import { importMarkdown } from './import';
@@ -129,6 +130,13 @@ export default function EditorApp() {
               required={BODY_REQUIRED[collection]}
               textareaRef={bodyRef}
               onInput={(v) => update((d) => ({ ...d, body: v }))}
+              toolbar={
+                <FormatToolbar
+                  textareaRef={bodyRef}
+                  value={draft.body}
+                  onChange={(v) => update((d) => ({ ...d, body: v }))}
+                />
+              }
             />
           </section>
           <section class="ed-preview" aria-labelledby="ed-preview-title">

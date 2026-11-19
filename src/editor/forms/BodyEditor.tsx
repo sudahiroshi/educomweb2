@@ -1,4 +1,4 @@
-/** 本文（Markdown）の入力欄（spec 6.3、D-46）。書式ボタンは plan 8.4 で追加 */
+/** 本文（Markdown）の入力欄（spec 6.3、D-46）。toolbar に書式ボタンを渡す */
 import type { Ref } from 'preact';
 import { fieldId, useIssue } from '../fields';
 
