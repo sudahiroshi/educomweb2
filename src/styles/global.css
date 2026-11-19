@@ -17,6 +17,15 @@ html {
   text-size-adjust: 100%;
 }
 
+/* 文字サイズ（spec 5.5）：ページ全体を rem で拡大する */
+html[data-font-size='large'] {
+  font-size: 125%;
+}
+
+html[data-font-size='xlarge'] {
+  font-size: 150%;
+}
+
 body {
   margin: 0;
   background: var(--color-bg);

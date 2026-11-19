@@ -6,6 +6,7 @@
  */
 import '../styles/global.css';
 import { site } from '../config/site';
+import { INIT_SCRIPT } from '../scripts/display-settings';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 
@@ -27,6 +28,8 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* テーマと文字サイズを描画前に適用する（spec 5.1。ちらつき防止のため CSS より前） */}
+    <script is:inline set:html={INIT_SCRIPT} />
     <title>{fullTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {description && <meta name="description" content={description} />}
