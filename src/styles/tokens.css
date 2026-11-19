@@ -1,0 +1,61 @@
+/*
+ * デザイントークン（spec 5.1〜5.3、案B「音のモチーフ」）。
+ * 色はここで定義した --color-* だけを使い、値を直接書かない。
+ * ダークは [data-theme="dark"] で上書きする（spec 5.4）。
+ */
+:root {
+  /* 色（ライト） */
+  --color-bg: #fdfdfb;
+  --color-surface: #ffffff;
+  --color-text: #0a0a0a;
+  --color-muted: #3a403e;
+  --color-accent: #0e6b66;
+  --color-on-accent: #ffffff;
+  --color-accent-soft: #dcefec;
+  --color-accent-soft-text: #063f3b;
+  --color-border: #d6d4cc;
+  --color-wave-sub: #9dcfc9;
+  --color-focus: #e39b2e;
+
+  /* 書体（spec 5.2） */
+  --font-sans: 'Zen Kaku Gothic New', system-ui, sans-serif;
+  --line-height-body: 1.8;
+
+  /* 文字サイズ（spec 5.2）。rem で指定し、文字サイズ切替に追従させる */
+  --font-size-h1: 2.1rem;
+  --font-size-h1-mobile: 1.6rem;
+  --font-size-h2: 1.4rem;
+  --font-size-h3: 1.1rem;
+  --font-size-body: 1rem;
+  --font-size-small: 0.85rem;
+  --font-size-badge: 0.8rem;
+
+  /* レイアウト（spec 5.3） */
+  --layout-max-width: 1160px;
+  --layout-gutter: 24px;
+  --layout-gutter-narrow: 16px;
+  --radius-card: 18px;
+  --radius-small: 12px;
+  --radius-pill: 999px;
+  --border-width: 1px;
+  --focus-width: 3px;
+  --tap-size: 44px;
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --color-bg: #0f1514;
+  --color-surface: #172120;
+  --color-text: #e5eeec;
+  --color-muted: #a2b4af;
+  --color-accent: #5ec7be;
+  --color-on-accent: #062421;
+  --color-accent-soft: #183532;
+  --color-accent-soft-text: #bde8e3;
+  --color-border: #263431;
+  --color-wave-sub: #2e6e68;
+  --color-focus: #e39b2e;
+
+  color-scheme: dark;
+}
