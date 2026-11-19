@@ -1,11 +1,12 @@
 ---
 /**
  * 共通ヘッダー（spec 4.4、案B）。
- * 1段目：ロゴ（波形マーク＋「日本音響学会／音響教育委員会」）と表示設定（文字サイズ・テーマ。5章で追加）
+ * 1段目：ロゴ（波形マーク＋「日本音響学会／音響教育委員会」）と表示設定（文字サイズ・テーマ）
  * 2段目：メインメニュー（MainNav）
  */
 import { site } from '../config/site';
 import MainNav from './MainNav.astro';
+import ThemeToggle from './ThemeToggle.astro';
 import WaveMark from './WaveMark.astro';
 ---
 
@@ -19,7 +20,7 @@ import WaveMark from './WaveMark.astro';
       </span>
     </a>
     <div class="header-tools">
-      <slot name="tools" />
+      <ThemeToggle />
     </div>
   </div>
   <div class="container header-nav">
@@ -75,10 +76,6 @@ import WaveMark from './WaveMark.astro';
     flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem;
-  }
-
-  .header-tools:empty {
-    display: none;
   }
 
   .header-nav {
