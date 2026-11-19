@@ -1,0 +1,70 @@
+---
+/**
+ * パンくずリスト（spec 4.4）。先頭に「トップ」を自動で付け、最後の項目（現在のページ）はリンクにしない。
+ */
+interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  /** トップ以降の項目。最後が現在のページ */
+  items: readonly Crumb[];
+}
+
+const { items } = Astro.props;
+const crumbs: Crumb[] = [{ label: 'トップ', href: '/' }, ...items];
+---
+
+<nav class="breadcrumbs" aria-label="パンくずリスト">
+  <ol>
+    {crumbs.map((crumb, i) =>
+      i === crumbs.length - 1 ? (
+        <li>
+          <span aria-current="page">{crumb.label}</span>
+        </li>
+      ) : (
+        <li>
+          <a href={crumb.href}>{crumb.label}</a>
+        </li>
+      ),
+    )}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    color: var(--color-muted);
+    font-size: var(--font-size-small);
+    list-style: none;
+  }
+
+  .breadcrumbs li {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .breadcrumbs li + li::before {
+    content: '›' / '';
+    margin-inline: 0.5rem;
+  }
+
+  .breadcrumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-size);
+    color: var(--color-muted);
+  }
+
+  .breadcrumbs a:hover {
+    color: var(--color-accent);
+  }
+
+  .breadcrumbs [aria-current='page'] {
+    color: var(--color-text);
+  }
+</style>

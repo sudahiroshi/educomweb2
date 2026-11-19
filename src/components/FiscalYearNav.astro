@@ -1,0 +1,68 @@
+---
+/**
+ * 年度リンク一覧（spec 4.2、D-27・D-28）。年度の降順で並べ、表示中の年度に aria-current="page"。
+ */
+import { formatFiscalYear } from '../lib/fiscal-year';
+
+interface Props {
+  years: readonly number[];
+  /** 表示中の年度 */
+  current?: number;
+  /** 年度ページの URL を作る関数 */
+  hrefFor: (fiscalYear: number) => string;
+  /** ナビゲーションの名前（読み上げ用） */
+  label?: string;
+}
+
+const { years, current, hrefFor, label = '年度別の一覧' } = Astro.props;
+const sorted = [...years].sort((a, b) => b - a);
+---
+
+{sorted.length > 0 && (
+  <nav class="fy-nav" aria-label={label}>
+    <ul>
+      {sorted.map((fy) => (
+        <li>
+          <a href={hrefFor(fy)} aria-current={fy === current ? 'page' : undefined}>
+            {formatFiscalYear(fy)}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .fy-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fy-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-size);
+    padding: 0.3rem 1rem;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .fy-nav a:hover {
+    border-color: var(--color-accent);
+  }
+
+  .fy-nav a[aria-current='page'] {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-weight: 700;
+  }
+</style>

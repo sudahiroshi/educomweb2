@@ -32,7 +32,7 @@
 - [x] **3.3** 基本レイアウト（`BaseLayout`）と Markdown 本文の体裁（`Prose`）を作る
 - [x] **3.4** ヘッダー・フッター・ロゴを作る（T-03, T-23, T-28）
 - [x] **3.5** メインメニューを作る（サブメニューの開閉、Esc・外側クリックで閉じる、幅768px未満の折りたたみ、`aria-current`）（T-06）
-- [ ] **3.6** 共通コンポーネントを作る：`KindBadge`、`EventCard`、`EventListItem`、`NewsListItem`、`LinkList`、`FiscalYearNav`、`Breadcrumbs`（T-07）
+- [x] **3.6** 共通コンポーネントを作る：`KindBadge`、`EventCard`、`EventListItem`、`NewsListItem`、`LinkList`、`FiscalYearNav`、`Breadcrumbs`（T-07）
 - [ ] **3.7** 波形の装飾（`WaveDivider`、`WaveMark`）を作る
 
 ## 4. ページ

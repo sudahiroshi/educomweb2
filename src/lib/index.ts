@@ -5,3 +5,4 @@ export * from './event-status';
 export * from './sort';
 export * from './format-date';
 export * from './frontmatter';
+export * from './event-kind';

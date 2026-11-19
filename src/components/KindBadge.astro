@@ -1,0 +1,38 @@
+---
+/**
+ * 種類ラベル（spec 5.6、T-07）。
+ * - variant="badge"：一覧行のラベル（短い名前、淡いアクセントの背景）
+ * - variant="text"：開催予定カードの種類表示（正式名、アクセント色の文字）
+ */
+import type { EventKind } from '../schemas';
+import { KIND_LABELS } from '../lib/event-kind';
+
+interface Props {
+  kind: EventKind;
+  variant?: 'badge' | 'text';
+}
+const { kind, variant = 'badge' } = Astro.props;
+const label = variant === 'badge' ? KIND_LABELS[kind].short : KIND_LABELS[kind].full;
+---
+
+<span class:list={['kind', `kind-${variant}`]}>{label}</span>
+
+<style>
+  .kind {
+    display: inline-block;
+    font-size: var(--font-size-badge);
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  .kind-badge {
+    padding: 0.1rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-accent-soft);
+    color: var(--color-accent-soft-text);
+  }
+
+  .kind-text {
+    color: var(--color-accent);
+  }
+</style>

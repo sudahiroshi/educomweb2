@@ -1,0 +1,45 @@
+---
+/**
+ * 外部リンク一覧（spec 5.6・8章）。外部のリンクにはアイコンと「（外部サイト）」を付ける。
+ */
+import type { Link } from '../schemas';
+import { isExternalUrl } from '../lib/markdown/external';
+import ExternalLink from './ExternalLink.astro';
+
+interface Props {
+  links: readonly Link[];
+}
+const { links } = Astro.props;
+---
+
+{links.length > 0 && (
+  <ul class="link-list">
+    {links.map((link) => (
+      <li>
+        {isExternalUrl(link.url) ? (
+          <ExternalLink href={link.url}>{link.label}</ExternalLink>
+        ) : (
+          <a href={link.url}>{link.label}</a>
+        )}
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .link-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .link-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-size);
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+</style>
