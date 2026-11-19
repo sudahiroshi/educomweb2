@@ -1,0 +1,44 @@
+---
+/** 404 ページ（spec 4.1）。検索エンジンには載せない */
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout title="ページが見つかりません" noindex>
+  <div class="not-found">
+    <p>お探しのページは見つかりませんでした。URL が変わったか、削除された可能性があります。</p>
+    <p>旧サイトのページは、新しいサイトでは別の場所に移っています。</p>
+    <ul>
+      <li>
+        <a href="/">トップページへ</a>
+      </li>
+      <li>
+        <a href="/search/">サイト内検索</a>
+      </li>
+    </ul>
+  </div>
+</PageLayout>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 46rem;
+  }
+
+  .not-found ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .not-found a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-size);
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+</style>
