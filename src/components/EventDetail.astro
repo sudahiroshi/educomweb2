@@ -1,7 +1,7 @@
 ---
 /**
  * 記事詳細（活動記録・研究発表会・国際会議）（spec 4.1）：
- * 種類ラベル、開催日、会場、外部リンク、本文、セッション表、掲載日・更新日。
+ * 種類ラベル、開催日、会場、外部リンク、セッション表、本文、掲載日・更新日（この順）。
  */
 import { render } from 'astro:content';
 import type { EventEntry } from '../lib/queries';
@@ -58,13 +58,14 @@ const hasBody = (entry.body ?? '').trim() !== '';
     </section>
   )}
 
+  {/* spec 4.1 の順：セッション表（slot）→ 本文 */}
+  <slot />
+
   {hasBody && (
     <Prose>
       <Content />
     </Prose>
   )}
-
-  <slot />
 
   <PublishedDates published={data.published} updated={data.updated} />
 </PageLayout>
