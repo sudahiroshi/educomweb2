@@ -87,10 +87,12 @@
 | `npm run check:pages` | ビルド結果の全ページを点検（`<title>`、h1 は1つ、見出しレベル、パンくず）。`npm run build` の後に実行 |
 | `npm run check:overflow -- [幅=320] [文字サイズ=xlarge] [テーマ=light] [--menu]` | 全ページの横はみ出し・欠けを点検（`npx astro preview --port 4329` を起動した状態で実行） |
 | `npm run check:events` | 閲覧時の開催状態の判定を、ブラウザの時計を固定して確認（`ASJ_EDCOM_TODAY=2026-11-19 npm run build` のサンプル記事で、プレビューを起動した状態で実行） |
+| `node tools/dev/visual-snapshot.mjs <保存先> [比較元]` | 主要ページを撮って保存し、比較元と画素単位で比べる（見た目を変えない改修の確認用。`.test-dist/` に保存する） |
 | `node tools/dev/screenshot.mjs <URL> <出力PNG> [幅] [高さ] [light\|dark] [normal\|large\|xlarge] [--full]` | 画面を撮る（手元の Chrome を使用）。横はみ出しの px も表示 |
 
 - ビルド日は環境変数 `ASJ_EDCOM_TODAY=YYYY-MM-DD` で差し替えられる（確認用。本番では設定しない）。
 - コミット前に `npm run verify`（lint・整形確認・型チェック・テストをまとめて実行）を通す。パイプで終了コードを隠さないこと。
 - TypeScript は 6.0 系に固定している（`typescript-eslint` と `@astrojs/check` が 7 系に未対応のため）。
-- jsx-a11y は ESLint 10 対応の `eslint-plugin-jsx-a11y-x` を使う。
+- jsx-a11y は ESLint 10 対応の `eslint-plugin-jsx-a11y-x` を使う（`.astro` と `.tsx` の両方）。
+- 表示部品（カード・一覧行・セッション表・名簿表など）は `src/components/ui/*.tsx`（Preact）にあり、サイト（ビルド時に静的 HTML）と編集画面のプレビューで共有する。スタイルは `src/styles/components.css`。Astro のスコープ付きスタイルは Preact の部品の中には効かないので、部品の外から当てるときは `:global()` を使う。
 - Markdown は Astro 7 の既定（Sätteri）ではなく unified で変換する（ユーザー判断）。設定は `src/lib/markdown/config.ts` に集め、変換結果は `src/lib/markdown/__snapshots__/sample.html` に固定してテストする。結果を意図して変えたときだけ `npx vitest run -u` で更新し、差分を確認してからコミットする。
