@@ -1,0 +1,26 @@
+---
+/** 運営委員（年度別）（spec 4.1） */
+import type { GetStaticPaths } from 'astro';
+import PageLayout from '../../layouts/PageLayout.astro';
+import CommitteeYear from '../../components/CommitteeYear.astro';
+import { loadCommittee } from '../../lib/queries';
+import { formatFiscalYear } from '../../lib/fiscal-year';
+
+export const getStaticPaths = (async () => {
+  const { entries, fiscalYears } = await loadCommittee();
+  return entries.map((entry) => ({
+    params: { year: String(entry.data.fiscalYear) },
+    props: { entry, fiscalYears },
+  }));
+}) satisfies GetStaticPaths;
+
+const { entry, fiscalYears } = Astro.props;
+const label = formatFiscalYear(entry.data.fiscalYear);
+---
+
+<PageLayout
+  title={`運営委員 ${label}`}
+  breadcrumbs={[{ label: '運営委員', href: '/committee/' }, { label }]}
+>
+  <CommitteeYear entry={entry} fiscalYears={fiscalYears} />
+</PageLayout>

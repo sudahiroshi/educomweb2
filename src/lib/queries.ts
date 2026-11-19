@@ -32,3 +32,11 @@ export async function loadEvents(target: EventListTarget) {
       : all.filter((e) => e.data.kind === target);
   return partitionEvents(events, buildToday);
 }
+
+/** 運営委員名簿（年度の降順）（D-28） */
+export async function loadCommittee() {
+  const entries = (await getCollection('committee')).sort(
+    (a, b) => b.data.fiscalYear - a.data.fiscalYear,
+  );
+  return { entries, fiscalYears: entries.map((e) => e.data.fiscalYear) };
+}

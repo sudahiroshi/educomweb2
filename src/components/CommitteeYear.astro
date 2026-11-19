@@ -1,0 +1,33 @@
+---
+/** 運営委員の1年度分（/committee/ と /committee/{年度}/ で共有）：名簿、補足、掲載日・更新日、年度リンク */
+import { render, type CollectionEntry } from 'astro:content';
+import { formatFiscalYear } from '../lib/fiscal-year';
+import FiscalYearNav from './FiscalYearNav.astro';
+import MemberTable from './MemberTable.astro';
+import Prose from './Prose.astro';
+import PublishedDates from './PublishedDates.astro';
+
+interface Props {
+  entry: CollectionEntry<'committee'>;
+  fiscalYears: readonly number[];
+}
+
+const { entry, fiscalYears } = Astro.props;
+const { Content } = await render(entry);
+const label = formatFiscalYear(entry.data.fiscalYear);
+const hasBody = (entry.body ?? '').trim() !== '';
+---
+
+<MemberTable members={entry.data.members} caption={`${label} 運営委員名簿`} />
+{hasBody && (
+  <Prose>
+    <Content />
+  </Prose>
+)}
+<PublishedDates published={entry.data.published} updated={entry.data.updated} />
+<FiscalYearNav
+  years={fiscalYears}
+  current={entry.data.fiscalYear}
+  hrefFor={(fy) => `/committee/${fy}/`}
+  label="運営委員の年度別名簿"
+/>

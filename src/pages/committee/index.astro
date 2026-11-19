@@ -1,0 +1,17 @@
+---
+/** 運営委員（spec 4.1、D-28）：最新年度の名簿＋過去年度へのリンク */
+import PageLayout from '../../layouts/PageLayout.astro';
+import CommitteeYear from '../../components/CommitteeYear.astro';
+import { loadCommittee } from '../../lib/queries';
+
+const { entries, fiscalYears } = await loadCommittee();
+const latest = entries[0];
+---
+
+<PageLayout title="運営委員" description="日本音響学会 音響教育委員会の運営委員名簿です。">
+  {latest ? (
+    <CommitteeYear entry={latest} fiscalYears={fiscalYears} />
+  ) : (
+    <p>名簿はまだ掲載されていません。</p>
+  )}
+</PageLayout>

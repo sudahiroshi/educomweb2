@@ -1,0 +1,77 @@
+---
+/** 運営委員名簿の表（spec 5.6・8章、D-19）：役職・氏名・所属。<caption> と <th scope> を付ける */
+import type { Member } from '../schemas';
+
+interface Props {
+  members: readonly Member[];
+  caption: string;
+}
+const { members, caption } = Astro.props;
+---
+
+<div class="table-scroll" role="region" aria-labelledby="member-caption" tabindex="0">
+  <table>
+    <caption id="member-caption">{caption}</caption>
+    <thead>
+      <tr>
+        <th scope="col">役職</th>
+        <th scope="col">氏名</th>
+        <th scope="col">所属</th>
+      </tr>
+    </thead>
+    <tbody>
+      {members.map((m) => (
+        <tr>
+          <td class="nowrap">{m.role}</td>
+          <td class="nowrap">{m.name}</td>
+          <td>{m.affiliation}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .table-scroll {
+    max-width: 46rem;
+    overflow-x: auto;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-small);
+    background: var(--color-surface);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-wrap: normal;
+  }
+
+  caption {
+    padding: 0.6rem 0.9rem;
+    font-weight: 700;
+    text-align: start;
+  }
+
+  th,
+  td {
+    padding: 0.6em 0.9em;
+    border-top: var(--border-width) solid var(--color-border);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  th {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-soft-text);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  td {
+    min-width: 8em;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+</style>
