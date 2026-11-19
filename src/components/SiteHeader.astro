@@ -73,6 +73,14 @@ import WaveMark from './WaveMark.astro';
     letter-spacing: 0.04em;
   }
 
+  /* 狭い画面（特大の文字サイズを含む）でもロゴを1行に収める */
+  @media (max-width: 399.98px) {
+    .logo-lower {
+      font-size: 1.15rem;
+      letter-spacing: 0.02em;
+    }
+  }
+
   .header-tools {
     display: flex;
     flex-wrap: wrap;

@@ -85,6 +85,7 @@
 | `npm run format` / `npm run format:check` | Prettier で整形／整形の確認 |
 | `npm test` | Vitest（`src/**/*.test.ts`・`tools/**/*.test.ts`） |
 | `npm run check:pages` | ビルド結果の全ページを点検（`<title>`、h1 は1つ、見出しレベル、パンくず）。`npm run build` の後に実行 |
+| `npm run check:overflow -- [幅=320] [文字サイズ=xlarge] [テーマ=light] [--menu]` | 全ページの横はみ出し・欠けを点検（`npx astro preview --port 4329` を起動した状態で実行） |
 | `node tools/dev/screenshot.mjs <URL> <出力PNG> [幅] [高さ] [light\|dark] [normal\|large\|xlarge] [--full]` | 画面を撮る（手元の Chrome を使用）。横はみ出しの px も表示 |
 
 - コミット前に `npm run verify`（lint・整形確認・型チェック・テストをまとめて実行）を通す。パイプで終了コードを隠さないこと。
