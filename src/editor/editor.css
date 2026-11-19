@@ -567,3 +567,23 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+.ed-github {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ed-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding-inline-start: 1.5rem;
+}
+
+.ed-steps li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}

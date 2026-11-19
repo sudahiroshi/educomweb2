@@ -27,6 +27,7 @@ import {
 } from './model';
 import { Preview } from './Preview';
 import { OutputPanel } from './OutputPanel';
+import { GitHubActions } from './GitHubActions';
 import { toMarkdown } from './serialize';
 import { useNarrow, PaneTabs } from './PaneTabs';
 import { BODY_REQUIRED } from '../schemas';
@@ -75,6 +76,22 @@ export default function EditorApp() {
   );
   const canOutput = issues.length === 0;
   const markdown = useMemo(() => toMarkdown(draft), [draft]);
+  // 出力するファイル（リポジトリ内のパス付き）：記事と、名前を付け替えた画像・添付ファイル
+  const outputFiles = useMemo(() => {
+    const articleId = draftId(draft);
+    return [
+      {
+        path: draftPath(draft) || `src/content/${collectionOf(draft.kind)}/article.md`,
+        data: markdown as Blob | string,
+      },
+      ...(articleId
+        ? attachments.map((a) => ({
+            path: `${draftFilesDir(draft)}/${attachmentName(articleId, a.seq, a.ext)}`,
+            data: a.blob as Blob | string,
+          }))
+        : []),
+    ];
+  }, [draft, markdown, attachments]);
 
   // 付け替え後のパス → 表示用の URL（プレビューで選んだ画像を表示する）
   const imageUrls = useMemo(() => {
@@ -297,16 +314,17 @@ export default function EditorApp() {
           canOutput={canOutput}
           fileName={`${id || 'article'}.md`}
           markdown={markdown}
-          files={[
-            { path: path || `src/content/${collection}/article.md`, data: markdown },
-            ...(id
-              ? attachments.map((a) => ({
-                  path: `${filesDir}/${attachmentName(id, a.seq, a.ext)}`,
-                  data: a.blob,
-                }))
-              : []),
-          ]}
-        />
+          files={outputFiles}
+        >
+          <GitHubActions
+            disabled={!canOutput}
+            path={path}
+            markdown={markdown}
+            loadedPath={draft.loadedPath}
+            filesDir={filesDir}
+            images={outputFiles.filter((f) => !f.path.endsWith('.md'))}
+          />
+        </OutputPanel>
       </div>
     </IssuesContext.Provider>
   );
