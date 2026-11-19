@@ -9,3 +9,4 @@ export * from './event-kind';
 export * from './lang';
 export * from './group';
 export * from './navigation';
+export * from './summary';

@@ -1,0 +1,17 @@
+---
+/** お知らせ一覧（spec 4.1、T-04 既定案: 当年度＋年度別ページへのリンク） */
+import PageLayout from '../../layouts/PageLayout.astro';
+import NewsYearList from '../../components/NewsYearList.astro';
+import { buildToday, loadNews } from '../../lib/queries';
+import { fiscalYearOf } from '../../lib/fiscal-year';
+import { listingFiscalYear } from '../../lib/event-status';
+
+const { byFiscalYear, fiscalYears } = await loadNews();
+// 当年度にお知らせがなければ、お知らせがある最新の年度を表示する（spec 4.2 と同じ規則）
+const fiscalYear = listingFiscalYear(fiscalYears, fiscalYearOf(buildToday));
+const items = fiscalYear === undefined ? [] : (byFiscalYear.get(fiscalYear) ?? []);
+---
+
+<PageLayout title="お知らせ" description="日本音響学会 音響教育委員会からのお知らせの一覧です。">
+  <NewsYearList fiscalYear={fiscalYear} items={items} fiscalYears={fiscalYears} />
+</PageLayout>

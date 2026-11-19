@@ -1,0 +1,26 @@
+---
+/** お知らせ（年度別）（T-04 既定案） */
+import type { GetStaticPaths } from 'astro';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import NewsYearList from '../../../components/NewsYearList.astro';
+import { loadNews } from '../../../lib/queries';
+import { formatFiscalYear } from '../../../lib/fiscal-year';
+
+export const getStaticPaths = (async () => {
+  const { byFiscalYear, fiscalYears } = await loadNews();
+  return fiscalYears.map((fy) => ({
+    params: { year: String(fy) },
+    props: { fiscalYear: fy, items: byFiscalYear.get(fy) ?? [], fiscalYears },
+  }));
+}) satisfies GetStaticPaths;
+
+const { fiscalYear, items, fiscalYears } = Astro.props;
+const label = formatFiscalYear(fiscalYear);
+---
+
+<PageLayout
+  title={`お知らせ ${label}`}
+  breadcrumbs={[{ label: 'お知らせ', href: '/news/' }, { label }]}
+>
+  <NewsYearList fiscalYear={fiscalYear} items={items} fiscalYears={fiscalYears} />
+</PageLayout>

@@ -1,0 +1,54 @@
+---
+/**
+ * お知らせの年度ごとの一覧（/news/ と /news/fy/{年度}/ で共有）。
+ */
+import type { NewsEntry } from '../lib/queries';
+import { formatFiscalYear } from '../lib/fiscal-year';
+import FiscalYearNav from './FiscalYearNav.astro';
+import NewsListItem from './NewsListItem.astro';
+
+interface Props {
+  /** 表示する年度（お知らせが1件もなければ undefined） */
+  fiscalYear: number | undefined;
+  items: readonly NewsEntry[];
+  fiscalYears: readonly number[];
+}
+const { fiscalYear, items, fiscalYears } = Astro.props;
+---
+
+{fiscalYear === undefined ? (
+  <p class="empty">お知らせはありません。</p>
+) : (
+  <section aria-labelledby="news-year-title">
+    <h2 id="news-year-title" class="year-title">
+      {formatFiscalYear(fiscalYear)}
+    </h2>
+    <ul class="item-list">
+      {items.map((n) => (
+        <NewsListItem news={n} />
+      ))}
+    </ul>
+  </section>
+)}
+<FiscalYearNav
+  years={fiscalYears}
+  current={fiscalYear}
+  hrefFor={(fy) => `/news/fy/${fy}/`}
+  label="お知らせの年度別一覧"
+/>
+
+<style>
+  .year-title {
+    font-size: var(--font-size-h2);
+  }
+
+  .item-list {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .empty {
+    color: var(--color-muted);
+  }
+</style>

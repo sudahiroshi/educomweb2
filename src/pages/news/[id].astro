@@ -1,0 +1,68 @@
+---
+/** お知らせ詳細（spec 4.1）：タイトル、掲載日・更新日、本文、関連記事 */
+import type { GetStaticPaths } from 'astro';
+import { getEntries, render } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import Prose from '../../components/Prose.astro';
+import EventListItem from '../../components/EventListItem.astro';
+import PublishedDates from '../../components/PublishedDates.astro';
+import { loadNews } from '../../lib/queries';
+import { compareEnded } from '../../lib/sort';
+import { summarize } from '../../lib/summary';
+
+export const getStaticPaths = (async () => {
+  const { news } = await loadNews();
+  return news.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+// 関連記事（D-20）。存在しない ID はビルド時の検査で失敗させている（src/content.config.ts）
+const related = entry.data.related ? (await getEntries(entry.data.related)).sort(compareEnded) : [];
+---
+
+<PageLayout
+  title={entry.data.title}
+  breadcrumbs={[{ label: 'お知らせ', href: '/news/' }, { label: entry.data.title }]}
+  description={summarize(entry.data.summary, entry.body)}
+>
+  <PublishedDates
+    slot="after-title"
+    published={entry.data.published}
+    updated={entry.data.updated}
+  />
+  <Prose>
+    <Content />
+  </Prose>
+  {related.length > 0 && (
+    <section class="related" aria-labelledby="related-title">
+      <h2 id="related-title">関連記事</h2>
+      <ul>
+        {related.map((e) => (
+          <EventListItem event={e} />
+        ))}
+      </ul>
+    </section>
+  )}
+</PageLayout>
+
+<style>
+  .related {
+    max-width: 46rem;
+    margin-top: 1rem;
+    padding: 1.25rem 1.5rem 0.5rem;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+  }
+
+  .related h2 {
+    font-size: var(--font-size-h3);
+  }
+
+  .related ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>
