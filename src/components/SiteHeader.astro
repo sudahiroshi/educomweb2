@@ -5,6 +5,7 @@
  * 2段目：メインメニュー（MainNav）
  */
 import { site } from '../config/site';
+import FontSizeSwitcher from './FontSizeSwitcher.astro';
 import MainNav from './MainNav.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import WaveMark from './WaveMark.astro';
@@ -20,6 +21,7 @@ import WaveMark from './WaveMark.astro';
       </span>
     </a>
     <div class="header-tools">
+      <FontSizeSwitcher />
       <ThemeToggle />
     </div>
   </div>

@@ -1,0 +1,97 @@
+---
+/**
+ * 文字サイズ切替（spec 5.5、D-49）：ノーマル（100%）／大（125%）／特大（150%）。
+ * role="group" aria-label="文字サイズ"、各ボタンに aria-pressed。押すと保存（asj-edcom:font-size）。
+ * スクリプトが動かない環境では表示しない。
+ */
+import { FONT_SIZES, FONT_SIZE_LABELS } from '../scripts/display-settings';
+---
+
+<div class="font-size" role="group" aria-label="文字サイズ" data-font-size-switcher hidden>
+  <span class="label" aria-hidden="true">
+    文字
+  </span>
+  {FONT_SIZES.map((size) => (
+    <button
+      type="button"
+      data-font-size-value={size}
+      aria-pressed={size === 'normal' ? 'true' : 'false'}
+    >
+      {FONT_SIZE_LABELS[size]}
+    </button>
+  ))}
+</div>
+
+<script>
+  import {
+    FONT_SIZE_KEY,
+    isFontSize,
+    writeStored,
+    type FontSize,
+  } from '../scripts/display-settings';
+
+  const root = document.documentElement;
+
+  function updateButtons() {
+    const current = isFontSize(root.dataset.fontSize) ? root.dataset.fontSize : 'normal';
+    document.querySelectorAll<HTMLButtonElement>('[data-font-size-value]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.fontSizeValue === current));
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-font-size-switcher]').forEach((group) => {
+    group.hidden = false;
+    group.querySelectorAll<HTMLButtonElement>('[data-font-size-value]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const size = button.dataset.fontSizeValue;
+        if (!isFontSize(size)) return;
+        const next: FontSize = size;
+        root.dataset.fontSize = next;
+        writeStored(FONT_SIZE_KEY, next);
+        updateButtons();
+      });
+    });
+  });
+  updateButtons();
+</script>
+
+<style>
+  .font-size {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.2rem;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+  }
+
+  .label {
+    padding-inline: 0.6rem 0.3rem;
+    color: var(--color-muted);
+    font-size: 0.8rem;
+  }
+
+  button {
+    min-width: var(--tap-size);
+    min-height: var(--tap-size);
+    padding: 0.25rem 0.8rem;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-text);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-soft-text);
+  }
+
+  button[aria-pressed='true'] {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+</style>
