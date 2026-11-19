@@ -2,9 +2,10 @@
  * コンテンツコレクションの定義（spec 2章）。
  * スキーマ本体は src/schemas/ にあり、編集画面と共有する。ここではビルド時だけの検査を加える。
  */
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { defineCollection, reference } from 'astro:content';
 import { glob, type Loader } from 'astro/loaders';
+import { parseFrontmatter } from './lib/frontmatter';
 import {
   BODY_REQUIRED,
   checkCommitteeYear,
@@ -43,6 +44,7 @@ function checkRelated(related: unknown): string[] {
 /**
  * src/content/{collection}/ の .md を読むローダー。
  * - ID は拡張子を除いたファイル名そのもの（spec 2.2。Astro 既定のスラッグ化や `slug` 項目は使わない）
+ * - フロントマターは編集画面と同じ読み方（parseFrontmatter：日付は文字列のまま）で読み直して検査する
  * - 保存の直前（スキーマ検査の後）に、ID の形式・本文の必須・運営委員の年度を検査し、
  *   news は related の参照切れも検査する。問題があればビルドを失敗させる（D-41）
  */
@@ -57,6 +59,12 @@ function contentLoader(collection: CollectionName): Loader {
     load: (context) =>
       inner.load({
         ...context,
+        parseData: (props) => {
+          const data = props.filePath
+            ? parseFrontmatter(readFileSync(props.filePath, 'utf8')).data
+            : props.data;
+          return context.parseData({ ...props, data: data as typeof props.data });
+        },
         store: {
           ...context.store,
           set: (entry) => {
