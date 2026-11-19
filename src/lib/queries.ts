@@ -3,7 +3,7 @@
  * 並び順・年度の振り分けなどの判定は、テストのある src/lib の関数に任せる。
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
-import type { EventKind } from '../schemas';
+import type { MeetingKind } from './event-kind';
 import { todayInTokyo } from './date';
 import { isListedInActivities, partitionEvents } from './event-status';
 import { groupByFiscalYear } from './group';
@@ -22,7 +22,7 @@ export async function loadNews() {
 }
 
 /** 一覧の対象：'activities'（活動記録に載る記事）または種類 */
-export type EventListTarget = 'activities' | Exclude<EventKind, 'activity'>;
+export type EventListTarget = 'activities' | MeetingKind;
 
 export async function loadEvents(target: EventListTarget) {
   const all = await getCollection('events');

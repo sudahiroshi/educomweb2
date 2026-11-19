@@ -101,6 +101,12 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95rem;
+    /* 本文の overflow-wrap: anywhere が列幅を押しつぶさないようにする。狭い画面では枠内で横スクロール */
+    overflow-wrap: normal;
+  }
+
+  .prose :global(td) {
+    min-width: 6em;
   }
 
   .prose :global(:is(th, td)) {

@@ -1,0 +1,24 @@
+---
+/** 音響学会研究発表会・共催研究発表会・国際会議の一覧（spec 4.1・4.2。構成は活動記録と同じ） */
+import type { GetStaticPaths } from 'astro';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import EventArchive from '../../../components/EventArchive.astro';
+import { MEETING_KINDS } from '../../../lib/event-kind';
+import { kindFiscalYearUrl, kindListTitle } from '../../../lib/event-kind';
+import { loadEvents } from '../../../lib/queries';
+
+export const getStaticPaths = (() =>
+  MEETING_KINDS.map((kind) => ({ params: { kind }, props: { kind } }))) satisfies GetStaticPaths;
+
+const { kind } = Astro.props;
+const events = await loadEvents(kind);
+const title = kindListTitle(kind);
+---
+
+<PageLayout title={title} description={`日本音響学会 音響教育委員会が関わる${title}の一覧です。`}>
+  <EventArchive
+    events={events}
+    hrefFor={(fy) => kindFiscalYearUrl(kind, fy)}
+    navLabel={`${title}の年度別一覧`}
+  />
+</PageLayout>

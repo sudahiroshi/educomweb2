@@ -12,6 +12,14 @@ export const KIND_LABELS: Record<EventKind, { full: string; short: string }> = {
   international: { full: '国際会議', short: '国際会議' },
 };
 
+/** 研究発表会3種（/meetings/{kind}/ に置く種類。D-30） */
+export const MEETING_KINDS = [
+  'asj',
+  'cosponsored',
+  'international',
+] as const satisfies readonly EventKind[];
+export type MeetingKind = (typeof MEETING_KINDS)[number];
+
 /** 種類ごとの一覧ページの URL（活動記録は /activities/、ほかは /meetings/{kind}/） */
 export function kindListUrl(kind: EventKind): string {
   return kind === 'activity' ? '/activities/' : `/meetings/${kind}/`;

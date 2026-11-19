@@ -10,3 +10,4 @@ export * from './lang';
 export * from './group';
 export * from './navigation';
 export * from './summary';
+export * from './talk';

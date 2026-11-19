@@ -1,0 +1,43 @@
+---
+/** 研究発表会等（年度別）（spec 4.2） */
+import type { GetStaticPaths } from 'astro';
+import PageLayout from '../../../../layouts/PageLayout.astro';
+import EventArchive from '../../../../components/EventArchive.astro';
+import {
+  MEETING_KINDS,
+  kindFiscalYearUrl,
+  kindListTitle,
+  kindListUrl,
+} from '../../../../lib/event-kind';
+import { formatFiscalYear } from '../../../../lib/fiscal-year';
+import { loadEvents } from '../../../../lib/queries';
+
+export const getStaticPaths = (async () => {
+  const paths = await Promise.all(
+    MEETING_KINDS.map(async (kind) => {
+      const events = await loadEvents(kind);
+      return events.endedFiscalYears.map((fy) => ({
+        params: { kind, year: String(fy) },
+        props: { kind, events, fiscalYear: fy },
+      }));
+    }),
+  );
+  return paths.flat();
+}) satisfies GetStaticPaths;
+
+const { kind, events, fiscalYear } = Astro.props;
+const title = kindListTitle(kind);
+const label = formatFiscalYear(fiscalYear);
+---
+
+<PageLayout
+  title={`${title} ${label}`}
+  breadcrumbs={[{ label: title, href: kindListUrl(kind) }, { label }]}
+>
+  <EventArchive
+    events={events}
+    fiscalYear={fiscalYear}
+    hrefFor={(fy) => kindFiscalYearUrl(kind, fy)}
+    navLabel={`${title}の年度別一覧`}
+  />
+</PageLayout>
