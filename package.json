@@ -29,6 +29,7 @@
     "@astrojs/sitemap": "^3.7.6",
     "@fontsource/zen-kaku-gothic-new": "^5.3.1",
     "astro": "^7.4.13",
+    "fflate": "^0.8.3",
     "github-slugger": "^2.0.0",
     "hast-util-to-string": "^3.0.1",
     "preact": "^11.2.0",

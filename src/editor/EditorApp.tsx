@@ -26,6 +26,8 @@ import {
   type Draft,
 } from './model';
 import { Preview } from './Preview';
+import { OutputPanel } from './OutputPanel';
+import { toMarkdown } from './serialize';
 import { useNarrow, PaneTabs } from './PaneTabs';
 import { BODY_REQUIRED } from '../schemas';
 import './editor.css';
@@ -52,11 +54,27 @@ export default function EditorApp() {
   }, []);
 
   const update = (fn: (d: Draft) => Draft) => setDraft((d) => fn(d));
-  const issues = useMemo(() => validateDraft(draft, index ?? undefined), [draft, index]);
+  const draftIssues = useMemo(() => validateDraft(draft, index ?? undefined), [draft, index]);
   const collection = collectionOf(draft.kind);
   const path = draftPath(draft);
   const id = draftId(draft);
   const filesDir = draftFilesDir(draft);
+
+  // チェック結果：入力内容（サイトと同じスキーマ）＋添付ファイル（spec 6.5）。1件でもあれば出力できない
+  const issues = useMemo(
+    () => [
+      ...draftIssues,
+      ...attachments
+        .filter((a) => a.error)
+        .map((a) => ({
+          path: 'attachments',
+          message: `${a.originalName}：${a.error}（削除してください）`,
+        })),
+    ],
+    [draftIssues, attachments],
+  );
+  const canOutput = issues.length === 0;
+  const markdown = useMemo(() => toMarkdown(draft), [draft]);
 
   // 付け替え後のパス → 表示用の URL（プレビューで選んだ画像を表示する）
   const imageUrls = useMemo(() => {
@@ -274,6 +292,21 @@ export default function EditorApp() {
             </>
           )}
         </section>
+
+        <OutputPanel
+          canOutput={canOutput}
+          fileName={`${id || 'article'}.md`}
+          markdown={markdown}
+          files={[
+            { path: path || `src/content/${collection}/article.md`, data: markdown },
+            ...(id
+              ? attachments.map((a) => ({
+                  path: `${filesDir}/${attachmentName(id, a.seq, a.ext)}`,
+                  data: a.blob,
+                }))
+              : []),
+          ]}
+        />
       </div>
     </IssuesContext.Provider>
   );
