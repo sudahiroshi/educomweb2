@@ -21,6 +21,8 @@ interface Props {
   breadcrumbs?: readonly Crumb[];
   description?: string;
   noindex?: boolean;
+  /** OGP の種類（記事詳細は article） */
+  ogType?: 'website' | 'article';
   /** サイト内検索の対象にする（spec 7章：お知らせ・記事詳細・運営委員・その他のページ） */
   searchable?: boolean;
 }
@@ -31,12 +33,13 @@ const {
   breadcrumbs,
   description,
   noindex,
+  ogType,
   searchable = false,
 } = Astro.props;
 const crumbs = breadcrumbs ?? [{ label: title }];
 ---
 
-<BaseLayout title={pageTitle} description={description} noindex={noindex}>
+<BaseLayout title={pageTitle} description={description} noindex={noindex} ogType={ogType}>
   <slot name="head" slot="head" />
   <div class="container page" data-pagefind-body={searchable ? '' : undefined}>
     <div data-pagefind-ignore>

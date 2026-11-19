@@ -10,6 +10,11 @@ export const site = {
     upper: '日本音響学会',
     lower: '音響教育委員会',
   },
+  /** 説明文（description の既定値。ページごとの説明がないとき） */
+  description:
+    '日本音響学会 音響教育委員会のWebサイトです。音響教育に関する研究発表会・国際会議・委員会活動の情報をお知らせします。',
+  // T-21 既定案: OGP 画像はサイト共通の1枚（波形マーク＋サイト名。tools/dev/make-og-image.mjs で生成）
+  ogImage: { path: '/og-image.png', width: 1200, height: 630, alt: '日本音響学会 音響教育委員会' },
   /** 公開URL（末尾スラッシュなし）。astro.config.mjs の `site` と一致させる */
   url: 'https://asj-edcom.acoustics.jp',
   /** 表示・日付判定に使うタイムゾーン（spec 2.3） */

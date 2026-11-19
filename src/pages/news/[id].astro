@@ -23,6 +23,7 @@ const related = entry.data.related ? (await getEntries(entry.data.related)).sort
 
 <PageLayout
   searchable
+  ogType="article"
   title={entry.data.title}
   breadcrumbs={[{ label: 'お知らせ', href: '/news/' }, { label: entry.data.title }]}
   description={summarize(entry.data.summary, entry.body)}
