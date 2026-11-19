@@ -30,6 +30,7 @@ import { Preview } from './Preview';
 import { OutputPanel } from './OutputPanel';
 import { GitHubActions } from './GitHubActions';
 import { LoadPanel } from './LoadPanel';
+import { clearDraft, formatSavedAt, loadDraft, saveDraft, type SavedDraft } from './autosave';
 import { toMarkdown } from './serialize';
 import { useNarrow, PaneTabs } from './PaneTabs';
 import { BODY_REQUIRED } from '../schemas';
@@ -49,6 +50,21 @@ export default function EditorApp() {
   const [processing, setProcessing] = useState(false);
 
   // 既存記事一覧（spec 3.8）
+  // 前回の入力内容（spec 6.1：再訪時に復元を提案する）。決めるまでは自動保存しない
+  const [saved, setSaved] = useState<SavedDraft | null>(() => {
+    const s = loadDraft();
+    return s && !isDraftEmpty(s.draft) ? s : null;
+  });
+
+  // 入力途中の内容をブラウザに自動保存する（1秒ごと。何も入力していなければ保存しない）
+  useEffect(() => {
+    if (saved) return;
+    const t = setTimeout(() => {
+      if (!isDraftEmpty(draft, today)) saveDraft(draft);
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [draft, saved, today]);
+
   useEffect(() => {
     fetch('/editor/index.json')
       .then((r) => (r.ok ? (r.json() as Promise<ContentIndex>) : null))
@@ -207,6 +223,46 @@ export default function EditorApp() {
   return (
     <IssuesContext.Provider value={issuesMap(issues)}>
       <div class="editor">
+        {saved && (
+          <section class="ed-restore" aria-labelledby="ed-restore-title">
+            <h2 id="ed-restore-title">前回の入力内容があります</h2>
+            <p>
+              {formatSavedAt(saved.savedAt)} に保存した「
+              {saved.draft.news.title ||
+                saved.draft.event.title ||
+                saved.draft.page.title ||
+                saved.draft.slug ||
+                '無題'}
+              」を復元しますか？
+            </p>
+            <div class="ed-actions">
+              <button
+                type="button"
+                class="ed-button ed-button-primary"
+                onClick={() => {
+                  setDraft(saved.draft);
+                  setSaved(null);
+                  setMessage(
+                    '前回の入力内容を復元しました。画像・添付ファイルは選び直してください。',
+                  );
+                }}
+              >
+                復元する
+              </button>
+              <button
+                type="button"
+                class="ed-button"
+                onClick={() => {
+                  clearDraft();
+                  setSaved(null);
+                  setMessage('前回の入力内容を破棄しました。');
+                }}
+              >
+                破棄する
+              </button>
+            </div>
+          </section>
+        )}
         <fieldset class="ed-kinds">
           <legend>種類</legend>
           <div class="ed-kind-options">
@@ -235,7 +291,25 @@ export default function EditorApp() {
           >
             新規作成
           </button>
+          <button
+            type="button"
+            class="ed-button"
+            onClick={() => {
+              if (
+                replaceDraft(
+                  emptyDraft(draft.kind, today),
+                  'ブラウザに保存していた下書きを消去しました。',
+                )
+              )
+                clearDraft();
+            }}
+          >
+            下書きを消去
+          </button>
         </div>
+        <p class="ed-hint">
+          入力内容はこのブラウザに自動で保存されます（画像・添付ファイルは保存されません）。
+        </p>
         <LoadPanel
           index={index}
           onLoad={(d, source) => {

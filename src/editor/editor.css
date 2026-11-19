@@ -637,3 +637,18 @@
   background: var(--color-bg);
   color: var(--color-text);
 }
+
+.ed-restore {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-card);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-soft-text);
+}
+
+.ed-restore h2 {
+  font-size: var(--font-size-h3);
+}
