@@ -19,3 +19,5 @@ export const BODY_REQUIRED: Record<CollectionName, boolean> = {
   committee: false,
   pages: true,
 };
+
+export * from './ids';

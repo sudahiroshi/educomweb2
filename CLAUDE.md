@@ -85,6 +85,6 @@
 | `npm run format` / `npm run format:check` | Prettier で整形／整形の確認 |
 | `npm test` | Vitest（`src/**/*.test.ts`・`tools/**/*.test.ts`） |
 
-- コミット前に `npm run lint`・`npm run format:check`・`npm run check`・`npm test` を通す。
+- コミット前に `npm run verify`（lint・整形確認・型チェック・テストをまとめて実行）を通す。パイプで終了コードを隠さないこと。
 - TypeScript は 6.0 系に固定している（`typescript-eslint` と `@astrojs/check` が 7 系に未対応のため）。
 - jsx-a11y は ESLint 10 対応の `eslint-plugin-jsx-a11y-x` を使う。
