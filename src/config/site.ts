@@ -16,6 +16,10 @@ export const site = {
   timeZone: 'Asia/Tokyo',
   /** `<html lang>` */
   lang: 'ja',
+  // T-28 既定案: 著作権表示の文言
+  copyright: '© 一般社団法人 日本音響学会 音響教育委員会',
+  /** 日本音響学会のサイト（フッターのリンク） */
+  asjUrl: 'https://acoustics.jp/',
   /** 記事を置く GitHub リポジトリ（D-54：管理者の個人アカウント、公開） */
   github: {
     owner: 'sudahiroshi',

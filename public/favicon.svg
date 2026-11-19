@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <!-- T-03 既定案: 波形マーク（src/components/WaveMark.astro と同じ形） -->
+  <style>
+    path { fill: none; stroke: #0E6B66; stroke-width: 3; stroke-linecap: round; }
+    @media (prefers-color-scheme: dark) { path { stroke: #5EC7BE; } }
+  </style>
+  <path d="M1 20H4M36 20H39" />
+  <path d="M8 16V24M13 10V30M18 6V34M23 13V27M28 8V32M33 15V25" />
+</svg>

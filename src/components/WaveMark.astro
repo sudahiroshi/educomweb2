@@ -1,0 +1,33 @@
+---
+/**
+ * ロゴの波形マーク（spec 4.4・5.3）。装飾なので aria-hidden。
+ * T-03 既定案: 日本音響学会のロゴは使わず、波形マーク＋文字ロゴとする（ファビコンも同じ形）。
+ * 形を変えるときは public/favicon.svg もそろえる。
+ */
+interface Props {
+  /** 表示の高さ（CSS の値） */
+  size?: string;
+}
+const { size = '2rem' } = Astro.props;
+---
+
+<svg
+  class="wave-mark"
+  viewBox="0 0 40 32"
+  aria-hidden="true"
+  focusable="false"
+  style={`height: ${size}; width: calc(${size} * 1.25);`}
+>
+  <path d="M0 16H4M36 16H40" />
+  <path d="M8 12V20M13 6V26M18 2V30M23 9V23M28 4V28M33 11V21" />
+</svg>
+
+<style>
+  .wave-mark {
+    flex: none;
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+  }
+</style>

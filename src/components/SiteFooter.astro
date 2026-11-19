@@ -1,0 +1,61 @@
+---
+/**
+ * 共通フッター（spec 4.4）。
+ * T-23 既定案: 日本音響学会へのリンク、サイト内検索、RSS、著作権表示のみ（問い合わせ先は載せない）
+ */
+import { site } from '../config/site';
+import ExternalLink from './ExternalLink.astro';
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p class="copyright">{site.copyright}</p>
+    <ul class="footer-links">
+      <li>
+        <ExternalLink href={site.asjUrl}>日本音響学会</ExternalLink>
+      </li>
+      <li>
+        <a href="/search/">サイト内検索</a>
+      </li>
+      <li>
+        <a href="/rss.xml">RSS</a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: var(--border-width) solid var(--color-border);
+    color: var(--color-muted);
+    font-size: var(--font-size-small);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding-block: 1.25rem;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-size);
+    color: var(--color-muted);
+  }
+
+  .footer-links a:hover {
+    color: var(--color-accent);
+  }
+</style>

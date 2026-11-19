@@ -1,0 +1,90 @@
+---
+/**
+ * 共通ヘッダー（spec 4.4、案B）。
+ * 1段目：ロゴ（波形マーク＋「日本音響学会／音響教育委員会」）と表示設定（文字サイズ・テーマ。5章で追加）
+ * 2段目：メインメニュー（MainNav、plan 3.5）
+ */
+import { site } from '../config/site';
+import WaveMark from './WaveMark.astro';
+---
+
+<header class="site-header">
+  <div class="container header-top">
+    <a class="logo" href="/">
+      <WaveMark size="2.1rem" />
+      <span class="logo-text">
+        <span class="logo-upper">{site.logo.upper}</span>
+        <span class="logo-lower">{site.logo.lower}</span>
+      </span>
+    </a>
+    <div class="header-tools">
+      <slot name="tools" />
+    </div>
+  </div>
+  <div class="container header-nav">
+    <slot name="nav" />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    padding-block: 1.1rem 0.4rem;
+  }
+
+  .header-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-height: var(--tap-size);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .logo:hover {
+    color: var(--color-text);
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+
+  .logo-upper {
+    color: var(--color-muted);
+    font-size: 0.8rem;
+  }
+
+  .logo-lower {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .header-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .header-tools:empty {
+    display: none;
+  }
+
+  .header-nav {
+    margin-top: 0.9rem;
+  }
+
+  .header-nav:empty {
+    display: none;
+  }
+</style>

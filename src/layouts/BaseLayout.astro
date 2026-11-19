@@ -6,6 +6,8 @@
  */
 import '../styles/global.css';
 import { site } from '../config/site';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 
 interface Props {
   /** ページ名。省略時（トップ）はサイト名のみ */
@@ -26,6 +28,7 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {description && <meta name="description" content={description} />}
     {noindex && <meta name="robots" content="noindex" />}
     <slot name="head" />
@@ -34,11 +37,11 @@ const fullTitle = title ? `${title} | ${site.name}` : site.name;
     <a class="skip-link" href="#main">
       本文へ移動
     </a>
-    <slot name="header" />
+    <SiteHeader />
     <main id="main" tabindex="-1">
       <slot />
     </main>
-    <slot name="footer" />
+    <SiteFooter />
   </body>
 </html>
 
