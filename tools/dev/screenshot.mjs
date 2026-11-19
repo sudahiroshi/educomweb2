@@ -33,6 +33,14 @@ await context.addInitScript(
 );
 const page = await context.newPage();
 await page.goto(url, { waitUntil: 'networkidle' });
+// 読み込み後にも表示設定をそろえる（テーマ適用スクリプトがないページでも撮れるように）
+await page.evaluate(
+  ([t, f]) => {
+    document.documentElement.dataset.theme = t;
+    document.documentElement.dataset.fontSize = f;
+  },
+  [theme, fontSize],
+);
 const overflow = await page.evaluate(
   () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
 );

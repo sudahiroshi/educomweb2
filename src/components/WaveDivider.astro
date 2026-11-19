@@ -1,0 +1,67 @@
+---
+/**
+ * 横幅いっぱいの波線の装飾（spec 5.3、案B）。主線＝アクセント、副線＝--color-wave-sub。
+ * 装飾なので aria-hidden。横に伸ばしても線の太さが変わらないよう non-scaling-stroke を使う。
+ */
+interface Props {
+  /** 主線の山の数 */
+  cycles?: number;
+}
+const { cycles = 10 } = Astro.props;
+
+const WIDTH = 1160;
+const HEIGHT = 48;
+const MID = HEIGHT / 2;
+
+/** 正弦波の折れ線（十分に細かく区切る） */
+function wavePath(waves: number, amplitude: number, phase: number): string {
+  const steps = Math.max(120, Math.round(waves * 24));
+  const points: string[] = [];
+  for (let i = 0; i <= steps; i++) {
+    const x = (WIDTH * i) / steps;
+    const y = MID - amplitude * Math.sin((2 * Math.PI * waves * i) / steps + phase);
+    points.push(`${i === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(2)}`);
+  }
+  return points.join('');
+}
+
+const main = wavePath(cycles, 18, 0);
+const sub = wavePath(cycles * 0.7, 9, Math.PI / 3);
+---
+
+<svg
+  class="wave-divider"
+  viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path class="wave-sub" d={sub}></path>
+  <path class="wave-main" d={main}></path>
+</svg>
+
+<style>
+  .wave-divider {
+    display: block;
+    width: 100%;
+    height: 3rem;
+    overflow: visible;
+  }
+
+  .wave-divider path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .wave-main {
+    stroke: var(--color-accent);
+    stroke-width: 2.5;
+  }
+
+  .wave-sub {
+    stroke: var(--color-wave-sub);
+    stroke-width: 2;
+  }
+</style>
