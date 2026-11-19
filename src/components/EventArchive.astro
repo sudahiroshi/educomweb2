@@ -12,6 +12,7 @@ import { fiscalYearOf, formatFiscalYear } from '../lib/fiscal-year';
 import { buildToday } from '../lib/queries';
 import EventCard from './EventCard.astro';
 import EventListItem from './EventListItem.astro';
+import EventStatusScript from './EventStatusScript.astro';
 import FiscalYearNav from './FiscalYearNav.astro';
 
 interface Props {
@@ -44,6 +45,10 @@ const ended = shownYear === undefined ? [] : (events.endedByFiscalYear.get(shown
         {events.upcoming.map((e) => (
           <li>
             <EventCard event={e} />
+            {/* 閲覧時に終了していたとき、終了リストへ移す一覧行（spec 3.3） */}
+            <template data-ended-template>
+              <EventListItem event={e} showKind={showKind} />
+            </template>
           </li>
         ))}
       </ul>
@@ -58,16 +63,19 @@ const ended = shownYear === undefined ? [] : (events.endedByFiscalYear.get(shown
   <h2 id="ended-title" class="section-title">
     {shownYear === undefined ? '終了したもの' : `${formatFiscalYear(shownYear)}の記録`}
   </h2>
-  {ended.length > 0 ? (
-    <ul class="item-list" data-ended-list data-fy={shownYear}>
+  {shownYear !== undefined && (
+    <ul class="item-list" data-ended-list data-fy={shownYear} hidden={ended.length === 0}>
       {ended.map((e) => (
         <EventListItem event={e} showKind={showKind} />
       ))}
     </ul>
-  ) : (
-    <p class="empty">終了したものはまだありません。</p>
   )}
+  <p class="empty" data-ended-empty hidden={ended.length > 0}>
+    終了したものはまだありません。
+  </p>
 </section>
+
+{isIndex && <EventStatusScript />}
 
 <FiscalYearNav
   years={events.endedFiscalYears}

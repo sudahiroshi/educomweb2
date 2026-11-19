@@ -1,0 +1,13 @@
+---
+/**
+ * 閲覧時の開催状態の判定を実行する（spec 3.3 の 2）。開催予定の欄があるページに置く。
+ * 同じページに複数置いても、スクリプトは1回だけ読み込まれる。
+ */
+---
+
+<script>
+  import { todayInTokyo } from '../lib/date';
+  import { applyEventStatus } from '../scripts/event-status-client';
+
+  applyEventStatus(document, todayInTokyo());
+</script>
