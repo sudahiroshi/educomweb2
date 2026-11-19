@@ -8,6 +8,7 @@ import { formatEventDate, formatYearMonth } from '../lib/format-date';
 import { eventEndDate } from '../lib/event-status';
 import { eventFiscalYear } from '../lib/fiscal-year';
 import { eventUrl } from '../lib/event-kind';
+import { textLang } from '../lib/lang';
 import KindBadge from './KindBadge.astro';
 
 interface Props {
@@ -37,7 +38,7 @@ const { data } = event;
     </time>
     {showKind && <KindBadge kind={data.kind} />}
   </p>
-  <a class="title" href={href}>
+  <a class="title" href={href} lang={textLang(data.title)}>
     {data.title}
   </a>
 </li>

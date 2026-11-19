@@ -1,0 +1,67 @@
+---
+/**
+ * トップ以外のページのレイアウト：パンくず＋ページ見出し（h1）＋本文（spec 4.4）。
+ * <title> は「{title} | 日本音響学会 音響教育委員会」。
+ */
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { textLang } from '../lib/lang';
+import BaseLayout from './BaseLayout.astro';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  /** ページ見出し（h1） */
+  title: string;
+  /** <title> に使う名前（省略時は title） */
+  pageTitle?: string;
+  /** パンくずのトップ以降（最後が現在のページ。省略時は title のみ） */
+  breadcrumbs?: readonly Crumb[];
+  description?: string;
+  noindex?: boolean;
+}
+
+const { title, pageTitle = title, breadcrumbs, description, noindex } = Astro.props;
+const crumbs = breadcrumbs ?? [{ label: title }];
+---
+
+<BaseLayout title={pageTitle} description={description} noindex={noindex}>
+  <div class="container page">
+    <Breadcrumbs items={crumbs} />
+    <div class="page-head">
+      <slot name="before-title" />
+      <h1 class="page-title" lang={textLang(title)}>
+        {title}
+      </h1>
+      <slot name="after-title" />
+    </div>
+    <slot />
+  </div>
+</BaseLayout>
+
+<style>
+  .page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: -1.5rem;
+  }
+
+  .page-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  @media (max-width: 599.98px) {
+    .page-title {
+      font-size: var(--font-size-h1-mobile);
+    }
+  }
+</style>

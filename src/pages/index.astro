@@ -1,10 +1,197 @@
 ---
-// 仮のトップページ（plan 4.1 で作り直す）
+/**
+ * トップページ（spec 4.1、案B）：紹介文、開催予定（全種類）、お知らせ、活動記録。
+ */
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import EventCard from '../components/EventCard.astro';
+import EventListItem from '../components/EventListItem.astro';
+import NewsListItem from '../components/NewsListItem.astro';
+import WaveDivider from '../components/WaveDivider.astro';
+import { compareEnded, compareNews } from '../lib/sort';
+import { isEnded, isListedInActivities, partitionEvents } from '../lib/event-status';
+import { todayInTokyo } from '../lib/date';
+
+// T-02 既定案: 見出し・紹介文は仮の文言のまま実装し、公開前に差し替える（plan 13.2）
+const HEADLINE = { before: '音のしくみを、', accent: '学ぶ・教える', after: '人のために' };
+const INTRO =
+  '[委員会の紹介文。教育セッションの企画、教材・デモンストレーションの情報発信などの活動内容を2〜3行で記載します。]';
+
+// T-05 既定案: お知らせ5件、活動記録5件、開催予定は全件
+const NEWS_COUNT = 5;
+const ACTIVITY_COUNT = 5;
+
+const today = todayInTokyo();
+const events = await getCollection('events');
+const { upcoming } = partitionEvents(events, today);
+const news = (await getCollection('news')).sort(compareNews).slice(0, NEWS_COUNT);
+const activities = events
+  .filter((e) => isListedInActivities(e) && isEnded(e, today))
+  .sort(compareEnded)
+  .slice(0, ACTIVITY_COUNT);
 ---
 
-<BaseLayout>
-  <div class="container">
-    <h1>日本音響学会 音響教育委員会</h1>
+<BaseLayout description="日本音響学会 音響教育委員会のWebサイトです。">
+  <div class="container top">
+    <section class="hero" aria-labelledby="top-title">
+      <h1 id="top-title">
+        {HEADLINE.before}
+        <span class="accent">{HEADLINE.accent}</span>
+        {HEADLINE.after}
+      </h1>
+      <p class="intro">{INTRO}</p>
+    </section>
+
+    <WaveDivider />
+
+    <section aria-labelledby="upcoming-title" data-upcoming-section>
+      <h2 id="upcoming-title" class="section-title">
+        開催予定
+      </h2>
+      {upcoming.length > 0 ? (
+        <ul class="card-grid" data-upcoming-list>
+          {upcoming.map((e) => (
+            <li>
+              <EventCard event={e} />
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      <p class="empty" data-upcoming-empty hidden={upcoming.length > 0}>
+        現在予定されている開催はありません。
+      </p>
+    </section>
+
+    <div class="card-grid">
+      <section class="panel" aria-labelledby="news-title">
+        <div class="panel-head">
+          <h2 id="news-title" class="section-title">
+            お知らせ
+          </h2>
+          <a class="more" href="/news/">
+            すべて見る<span class="visually-hidden">（お知らせ）</span>
+          </a>
+        </div>
+        {news.length > 0 ? (
+          <ul class="item-list">
+            {news.map((n) => (
+              <NewsListItem news={n} />
+            ))}
+          </ul>
+        ) : (
+          <p class="empty">お知らせはありません。</p>
+        )}
+      </section>
+
+      <section class="panel" aria-labelledby="activities-title">
+        <div class="panel-head">
+          <h2 id="activities-title" class="section-title">
+            活動記録
+          </h2>
+          <a class="more" href="/activities/">
+            年度別に見る<span class="visually-hidden">（活動記録）</span>
+          </a>
+        </div>
+        {activities.length > 0 ? (
+          <ul class="item-list">
+            {activities.map((e) => (
+              <EventListItem event={e} dateStyle="month" />
+            ))}
+          </ul>
+        ) : (
+          <p class="empty">活動記録はありません。</p>
+        )}
+      </section>
+    </div>
   </div>
 </BaseLayout>
+
+<style>
+  .top {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .hero h1 {
+    font-size: var(--font-size-h1);
+    letter-spacing: 0.04em;
+  }
+
+  .accent {
+    color: var(--color-accent);
+  }
+
+  .intro {
+    max-width: 38rem;
+    margin-top: 1rem;
+    color: var(--color-muted);
+  }
+
+  .section-title {
+    font-size: var(--font-size-h2);
+  }
+
+  #upcoming-title {
+    margin-bottom: 1.25rem;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .panel {
+    padding: 1.5rem 1.5rem 0.75rem;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+  }
+
+  .panel-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+
+  .more {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-size);
+    color: var(--color-accent);
+    font-size: var(--font-size-small);
+    font-weight: 700;
+  }
+
+  .item-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .empty {
+    color: var(--color-muted);
+  }
+
+  .panel .empty {
+    padding-block: 1rem;
+  }
+
+  @media (max-width: 599.98px) {
+    .hero h1 {
+      font-size: var(--font-size-h1-mobile);
+    }
+
+    .panel {
+      padding-inline: 1rem;
+    }
+  }
+</style>

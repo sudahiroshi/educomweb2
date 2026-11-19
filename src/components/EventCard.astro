@@ -9,6 +9,7 @@ import { dateBlock, formatEventDate } from '../lib/format-date';
 import { eventEndDate } from '../lib/event-status';
 import { eventFiscalYear } from '../lib/fiscal-year';
 import { eventUrl } from '../lib/event-kind';
+import { textLang } from '../lib/lang';
 import KindBadge from './KindBadge.astro';
 
 interface Props {
@@ -42,7 +43,9 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
   <div class="body">
     <KindBadge kind={data.kind} variant="text" />
     <Heading class="title">
-      <a href={href}>{data.title}</a>
+      <a href={href} lang={textLang(data.title)}>
+        {data.title}
+      </a>
     </Heading>
     <p class="meta">
       <time datetime={data.startDate}>{formatEventDate(data.startDate, data.endDate)}</time>
