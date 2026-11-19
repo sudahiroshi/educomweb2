@@ -6,7 +6,8 @@
  */
 import type { EventData } from '../schemas';
 import { dateBlock, formatEventDate } from '../lib/format-date';
-import { eventEndDate } from '../lib/event-status';
+import { eventEndDate, isOngoing } from '../lib/event-status';
+import { buildToday } from '../lib/queries';
 import { eventFiscalYear } from '../lib/fiscal-year';
 import { eventUrl } from '../lib/event-kind';
 import { textLang } from '../lib/lang';
@@ -31,6 +32,7 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
 
 <article
   class="event-card"
+  data-start={data.startDate}
   data-end={eventEndDate(event)}
   data-fy={eventFiscalYear(event)}
   data-event-item
@@ -41,7 +43,13 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
     <span class="date-day">{block.day}</span>
   </div>
   <div class="body">
-    <KindBadge kind={data.kind} variant="text" />
+    <p class="labels">
+      <KindBadge kind={data.kind} variant="text" />
+      {/* T-29 既定案: 開催期間中は「開催中」を付ける（ビルド時に判定し、閲覧時のスクリプトで更新） */}
+      <span class="ongoing" data-ongoing hidden={!isOngoing(event, buildToday)}>
+        開催中
+      </span>
+    </p>
     <Heading class="title">
       <a href={href} lang={textLang(data.title)}>
         {data.title}
@@ -106,6 +114,23 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
     flex-direction: column;
     gap: 0.2rem;
     min-width: 0;
+  }
+
+  .labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.6rem;
+    align-items: center;
+  }
+
+  .ongoing {
+    padding: 0 0.6rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-size: var(--font-size-badge);
+    font-weight: 700;
+    line-height: 1.6;
   }
 
   .title {

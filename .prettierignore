@@ -12,3 +12,4 @@ src/content/
 **/__snapshots__/
 # 変換テストの入力（整形すると変換結果が変わるため対象外）
 src/lib/markdown/fixtures/
+.test-dist/

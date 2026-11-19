@@ -10,7 +10,7 @@ import NewsListItem from '../components/NewsListItem.astro';
 import WaveDivider from '../components/WaveDivider.astro';
 import { compareEnded, compareNews } from '../lib/sort';
 import { isEnded, isListedInActivities, partitionEvents } from '../lib/event-status';
-import { todayInTokyo } from '../lib/date';
+import { buildToday } from '../lib/queries';
 
 // T-02 既定案: 見出し・紹介文は仮の文言のまま実装し、公開前に差し替える（plan 13.2）
 const HEADLINE = { before: '音のしくみを、', accent: '学ぶ・教える', after: '人のために' };
@@ -21,7 +21,7 @@ const INTRO =
 const NEWS_COUNT = 5;
 const ACTIVITY_COUNT = 5;
 
-const today = todayInTokyo();
+const today = buildToday;
 const events = await getCollection('events');
 const { upcoming } = partitionEvents(events, today);
 const news = (await getCollection('news')).sort(compareNews).slice(0, NEWS_COUNT);

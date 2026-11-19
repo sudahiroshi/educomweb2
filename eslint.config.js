@@ -8,7 +8,7 @@ import tseslint from 'typescript-eslint';
 export default defineConfig(
   {
     // legacy/ は旧サイトの資料のため対象外
-    ignores: ['dist/', '.astro/', 'node_modules/', 'legacy/', 'public/'],
+    ignores: ['dist/', '.test-dist/', '.astro/', 'node_modules/', 'legacy/', 'public/'],
   },
   js.configs.recommended,
   ...tseslint.configs.strict,

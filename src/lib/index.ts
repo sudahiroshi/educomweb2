@@ -11,3 +11,4 @@ export * from './group';
 export * from './navigation';
 export * from './summary';
 export * from './talk';
+export * from './build-date';

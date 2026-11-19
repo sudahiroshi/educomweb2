@@ -4,7 +4,7 @@
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { MeetingKind } from './event-kind';
-import { todayInTokyo } from './date';
+import { BUILD_TODAY_ENV, resolveBuildToday } from './build-date';
 import { isListedInActivities, partitionEvents } from './event-status';
 import { groupByFiscalYear } from './group';
 import { compareNews } from './sort';
@@ -12,8 +12,8 @@ import { compareNews } from './sort';
 export type NewsEntry = CollectionEntry<'news'>;
 export type EventEntry = CollectionEntry<'events'>;
 
-/** ビルド日（日本時間）。開催予定・終了の振り分けの基準（spec 3.3） */
-export const buildToday = todayInTokyo();
+/** ビルド日（日本時間）。開催予定・終了の振り分けの基準（spec 3.3）。確認用に環境変数で差し替え可 */
+export const buildToday = resolveBuildToday(process.env[BUILD_TODAY_ENV]);
 
 /** お知らせ（掲載日の降順）と年度ごとの振り分け（T-04 既定案: 年度別ページ） */
 export async function loadNews() {

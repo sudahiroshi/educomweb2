@@ -23,3 +23,6 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .claude/settings.local.json
+
+# 日付を固定した確認用のビルド出力（plan 6.3）
+.test-dist/
