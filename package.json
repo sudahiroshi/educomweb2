@@ -19,7 +19,8 @@
     "test:watch": "vitest",
     "verify": "npm run lint && npm run format:check && npm run check && npm test",
     "check:pages": "node tools/dev/check-pages.mjs",
-    "check:overflow": "node tools/dev/check-overflow.mjs"
+    "check:overflow": "node tools/dev/check-overflow.mjs",
+    "check:events": "node tools/dev/check-event-status.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.10",
