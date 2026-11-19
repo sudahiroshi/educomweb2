@@ -1,0 +1,103 @@
+---
+/**
+ * 開催予定＋終了分（年度別）の一覧（spec 4.2、D-22〜D-27）。活動記録と研究発表会3種で共有する。
+ * - fiscalYear を渡さない：一覧ページ。開催予定と、当年度（なければ終了分がある最新年度）の終了分
+ * - fiscalYear を渡す：年度ページ。その年度の終了分のみ
+ * 閲覧時の判定（spec 3.3、plan 6.2）のため、リストに data-upcoming-list・data-ended-list・data-fy を付ける。
+ */
+import type { PartitionedEvents } from '../lib/event-status';
+import type { EventEntry } from '../lib/queries';
+import { listingFiscalYear } from '../lib/event-status';
+import { fiscalYearOf, formatFiscalYear } from '../lib/fiscal-year';
+import { buildToday } from '../lib/queries';
+import EventCard from './EventCard.astro';
+import EventListItem from './EventListItem.astro';
+import FiscalYearNav from './FiscalYearNav.astro';
+
+interface Props {
+  events: PartitionedEvents<EventEntry>;
+  /** 年度ページの年度（一覧ページでは省略） */
+  fiscalYear?: number;
+  /** 年度ページの URL */
+  hrefFor: (fiscalYear: number) => string;
+  /** 終了分の一覧に種類ラベルを出すか */
+  showKind?: boolean;
+  /** 年度リンク一覧の名前（読み上げ用） */
+  navLabel: string;
+}
+
+const { events, fiscalYear, hrefFor, showKind = false, navLabel } = Astro.props;
+const isIndex = fiscalYear === undefined;
+const shownYear = isIndex
+  ? listingFiscalYear(events.endedFiscalYears, fiscalYearOf(buildToday))
+  : fiscalYear;
+const ended = shownYear === undefined ? [] : (events.endedByFiscalYear.get(shownYear) ?? []);
+---
+
+{isIndex && (
+  <section aria-labelledby="upcoming-title" data-upcoming-section>
+    <h2 id="upcoming-title" class="section-title">
+      開催予定
+    </h2>
+    {events.upcoming.length > 0 && (
+      <ul class="card-grid" data-upcoming-list>
+        {events.upcoming.map((e) => (
+          <li>
+            <EventCard event={e} />
+          </li>
+        ))}
+      </ul>
+    )}
+    <p class="empty" data-upcoming-empty hidden={events.upcoming.length > 0}>
+      現在予定されている開催はありません。
+    </p>
+  </section>
+)}
+
+<section aria-labelledby="ended-title">
+  <h2 id="ended-title" class="section-title">
+    {shownYear === undefined ? '終了したもの' : `${formatFiscalYear(shownYear)}の記録`}
+  </h2>
+  {ended.length > 0 ? (
+    <ul class="item-list" data-ended-list data-fy={shownYear}>
+      {ended.map((e) => (
+        <EventListItem event={e} showKind={showKind} />
+      ))}
+    </ul>
+  ) : (
+    <p class="empty">終了したものはまだありません。</p>
+  )}
+</section>
+
+<FiscalYearNav
+  years={events.endedFiscalYears}
+  current={shownYear}
+  hrefFor={hrefFor}
+  label={navLabel}
+/>
+
+<style>
+  .section-title {
+    margin-bottom: 0.75rem;
+    font-size: var(--font-size-h2);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .item-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .empty {
+    color: var(--color-muted);
+  }
+</style>

@@ -1,0 +1,17 @@
+---
+/** 活動記録（spec 4.1・4.2）：開催予定＋当年度の終了分＋過去年度へのリンク */
+import PageLayout from '../../layouts/PageLayout.astro';
+import EventArchive from '../../components/EventArchive.astro';
+import { loadEvents } from '../../lib/queries';
+
+const events = await loadEvents('activities');
+---
+
+<PageLayout title="活動記録" description="日本音響学会 音響教育委員会の活動記録です。">
+  <EventArchive
+    events={events}
+    hrefFor={(fy) => `/activities/fy/${fy}/`}
+    showKind
+    navLabel="活動記録の年度別一覧"
+  />
+</PageLayout>

@@ -1,0 +1,32 @@
+---
+/** 活動記録（年度別）（spec 4.2） */
+import type { GetStaticPaths } from 'astro';
+import PageLayout from '../../../layouts/PageLayout.astro';
+import EventArchive from '../../../components/EventArchive.astro';
+import { loadEvents } from '../../../lib/queries';
+import { formatFiscalYear } from '../../../lib/fiscal-year';
+
+export const getStaticPaths = (async () => {
+  const events = await loadEvents('activities');
+  return events.endedFiscalYears.map((fy) => ({
+    params: { year: String(fy) },
+    props: { events, fiscalYear: fy },
+  }));
+}) satisfies GetStaticPaths;
+
+const { events, fiscalYear } = Astro.props;
+const label = formatFiscalYear(fiscalYear);
+---
+
+<PageLayout
+  title={`活動記録 ${label}`}
+  breadcrumbs={[{ label: '活動記録', href: '/activities/' }, { label }]}
+>
+  <EventArchive
+    events={events}
+    fiscalYear={fiscalYear}
+    hrefFor={(fy) => `/activities/fy/${fy}/`}
+    showKind
+    navLabel="活動記録の年度別一覧"
+  />
+</PageLayout>

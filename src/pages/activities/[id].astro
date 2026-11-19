@@ -1,0 +1,15 @@
+---
+/** 記事詳細（委員会活動、kind: activity）（spec 4.1） */
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import EventDetail from '../../components/EventDetail.astro';
+
+export const getStaticPaths = (async () => {
+  const events = await getCollection('events', (e) => e.data.kind === 'activity');
+  return events.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+---
+
+<EventDetail entry={entry} />
