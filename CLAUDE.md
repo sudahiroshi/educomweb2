@@ -76,4 +76,15 @@
 
 ## コマンド
 
-（plan 2.1 でプロジェクト作成後に記入する）
+| コマンド | 内容 |
+|---|---|
+| `npm run dev` | 開発サーバー（バックグラウンドなら `npx astro dev --background`、停止は `npx astro dev stop`） |
+| `npm run build` | 本番ビルド（`dist/`） |
+| `npm run check` | `astro check`（型チェック） |
+| `npm run lint` | ESLint（TypeScript strict ＋ Astro ＋ jsx-a11y strict） |
+| `npm run format` / `npm run format:check` | Prettier で整形／整形の確認 |
+| `npm test` | Vitest（`src/**/*.test.ts`・`tools/**/*.test.ts`） |
+
+- コミット前に `npm run lint`・`npm run format:check`・`npm run check`・`npm test` を通す。
+- TypeScript は 6.0 系に固定している（`typescript-eslint` と `@astrojs/check` が 7 系に未対応のため）。
+- jsx-a11y は ESLint 10 対応の `eslint-plugin-jsx-a11y-x` を使う。

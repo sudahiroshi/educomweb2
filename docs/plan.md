@@ -17,7 +17,7 @@
 
 ## 2. プロジェクト基盤とコンテンツモデル
 
-- [ ] **2.1** Astro プロジェクトを作成する（TypeScript strict、ESLint、Prettier、Vitest）
+- [x] **2.1** Astro プロジェクトを作成する（TypeScript strict、ESLint、Prettier、Vitest）
 - [ ] **2.2** `src/config/site.ts` を作る（サイト名、URL、GitHub の owner/repo/branch、タイムゾーン）
 - [ ] **2.3** `src/schemas/` に Zod スキーマを定義する（news / events / session / talk / committee / pages、spec 2章）（T-08, T-13, T-14, T-15, T-16, T-27）
 - [ ] **2.4** `src/content.config.ts` にコレクションを定義する（`related` の参照チェック、`pages` の予約語チェック、`committee` のファイル名と年度の一致チェック）
