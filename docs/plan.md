@@ -19,7 +19,7 @@
 
 - [x] **2.1** Astro プロジェクトを作成する（TypeScript strict、ESLint、Prettier、Vitest）
 - [x] **2.2** `src/config/site.ts` を作る（サイト名、URL、GitHub の owner/repo/branch、タイムゾーン）
-- [ ] **2.3** `src/schemas/` に Zod スキーマを定義する（news / events / session / talk / committee / pages、spec 2章）（T-08, T-13, T-14, T-15, T-16, T-27）
+- [x] **2.3** `src/schemas/` に Zod スキーマを定義する（news / events / session / talk / committee / pages、spec 2章）（T-08, T-13, T-14, T-15, T-16, T-27）
 - [ ] **2.4** `src/content.config.ts` にコレクションを定義する（`related` の参照チェック、`pages` の予約語チェック、`committee` のファイル名と年度の一致チェック）
 - [ ] **2.5** `src/lib/` に日付・年度・開催状態・並び順・日付表示の関数を作り、単体テストを書く（年度の境目、月またぎ・年またぎの開催日、終了日の翌日0時の切り替え）
 - [ ] **2.6** 開発用のサンプル記事を作る（全種類、セッション複数、共著者あり、1日開催／複数日開催、開催予定／終了、複数年度）
