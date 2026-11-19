@@ -1,8 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { site } from './src/config/site.ts';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://asj-edcom.acoustics.jp',
+  site: site.url,
   trailingSlash: 'always',
 });
