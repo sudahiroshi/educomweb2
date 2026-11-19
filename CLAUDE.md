@@ -88,3 +88,4 @@
 - コミット前に `npm run verify`（lint・整形確認・型チェック・テストをまとめて実行）を通す。パイプで終了コードを隠さないこと。
 - TypeScript は 6.0 系に固定している（`typescript-eslint` と `@astrojs/check` が 7 系に未対応のため）。
 - jsx-a11y は ESLint 10 対応の `eslint-plugin-jsx-a11y-x` を使う。
+- Markdown は Astro 7 の既定（Sätteri）ではなく unified で変換する（ユーザー判断）。設定は `src/lib/markdown/config.ts` に集め、変換結果は `src/lib/markdown/__snapshots__/sample.html` に固定してテストする。結果を意図して変えたときだけ `npx vitest run -u` で更新し、差分を確認してからコミットする。
