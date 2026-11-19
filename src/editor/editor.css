@@ -483,3 +483,73 @@
   border-color: var(--color-accent);
   color: var(--color-on-accent);
 }
+
+/* ---- 画像・添付ファイル ---- */
+.ed-file-input {
+  position: relative;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-size);
+  padding: 0.35rem 1.1rem;
+  border: var(--border-width) solid var(--color-accent);
+  border-radius: var(--radius-pill);
+  color: var(--color-accent);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 見た目はボタン、操作は中の input（キーボード・読み上げはそのまま使える） */
+.ed-file-input input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ed-file-input:focus-within {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.ed-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ed-attachment {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.ed-attachment-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ed-thumb {
+  flex: none;
+  width: 4.5rem;
+  height: 4.5rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.ed-thumb-file {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-soft-text);
+  font-size: var(--font-size-small);
+  font-weight: 700;
+}

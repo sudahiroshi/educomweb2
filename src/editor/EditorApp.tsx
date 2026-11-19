@@ -8,11 +8,23 @@ import type { ContentIndex } from './content-index';
 import { fieldId, IssuesContext, issuesMap, TextField } from './fields';
 import { BodyEditor } from './forms/BodyEditor';
 import { FormatToolbar } from './forms/FormatToolbar';
+import { AttachmentsPanel, type Attachment } from './forms/AttachmentsPanel';
+import { attachmentName, attachmentUrl, nextSeq } from './attachments';
+import { applyFormat, blockInsert } from './format';
+import { processFile } from './image-process';
 import { KindForm } from './forms/KindForm';
 import { rawUrl } from './github';
 import { importMarkdown } from './import';
 import { collectionOf, EDITOR_KINDS, kindLabel, type EditorKind } from './kinds';
-import { draftId, draftPath, emptyDraft, validateDraft, type Draft } from './model';
+import {
+  draftFilesDir,
+  draftId,
+  draftPath,
+  emptyDraft,
+  newKey,
+  validateDraft,
+  type Draft,
+} from './model';
 import { Preview } from './Preview';
 import { useNarrow, PaneTabs } from './PaneTabs';
 import { BODY_REQUIRED } from '../schemas';
@@ -27,6 +39,9 @@ export default function EditorApp() {
   // 幅の狭い画面では「入力」「プレビュー」をタブで切り替える（spec 6.2）
   const narrow = useNarrow();
   const [pane, setPane] = useState<'form' | 'preview'>('form');
+  // 画像・添付ファイル（ブラウザ内だけに持つ。下書きの自動保存には含めない）
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [processing, setProcessing] = useState(false);
 
   // 既存記事一覧（spec 3.8）
   useEffect(() => {
@@ -41,6 +56,75 @@ export default function EditorApp() {
   const collection = collectionOf(draft.kind);
   const path = draftPath(draft);
   const id = draftId(draft);
+  const filesDir = draftFilesDir(draft);
+
+  // 付け替え後のパス → 表示用の URL（プレビューで選んだ画像を表示する）
+  const imageUrls = useMemo(() => {
+    const map = new Map<string, string>();
+    if (!id) return map;
+    for (const a of attachments)
+      map.set(attachmentUrl(collection, id, attachmentName(id, a.seq, a.ext)), a.url);
+    return map;
+  }, [attachments, collection, id]);
+
+  async function addFiles(files: File[]) {
+    if (files.length === 0) return;
+    setProcessing(true);
+    const added: Attachment[] = [];
+    let seq = nextSeq(attachments.map((a) => a.seq));
+    for (const file of files) {
+      try {
+        const r = await processFile(file);
+        if (!r.ext) {
+          // 受け付けない種類は一覧に入れず、理由だけ知らせる
+          setMessage(`${file.name}：${r.error ?? '追加できません'}`);
+          continue;
+        }
+        added.push({
+          key: newKey(),
+          seq: seq++,
+          originalName: file.name,
+          blob: r.blob,
+          ext: r.ext,
+          image: r.image,
+          url: URL.createObjectURL(r.blob),
+          note: r.note,
+          error: r.error,
+        });
+      } catch {
+        setMessage(`${file.name} を読み込めませんでした。`);
+      }
+    }
+    setAttachments((list) => [...list, ...added]);
+    setProcessing(false);
+  }
+
+  function removeAttachment(key: string) {
+    setAttachments((list) => {
+      const target = list.find((a) => a.key === key);
+      if (target) URL.revokeObjectURL(target.url);
+      return list.filter((a) => a.key !== key);
+    });
+  }
+
+  /** 添付ファイルを本文のカーソル位置に挿入する（画像は ![説明](パス)、それ以外はリンク） */
+  function insertAttachment(a: Attachment) {
+    if (!id) return;
+    const url = attachmentUrl(collection, id, attachmentName(id, a.seq, a.ext));
+    const el = bodyRef.current;
+    const start = el?.selectionStart ?? draft.body.length;
+    const end = el?.selectionEnd ?? draft.body.length;
+    const text = a.image
+      ? applyFormat(draft.body, start, end, 'image', { imagePath: url }).text
+      : blockInsert(
+          draft.body,
+          start,
+          end,
+          `[${a.originalName.replace(/[[\]]/g, '')}（${a.ext.toUpperCase()}）](${url})`,
+        ).text;
+    update((d) => ({ ...d, body: text }));
+    setMessage(`本文に ${a.image ? '画像' : 'ファイルへのリンク'} を挿入しました。`);
+  }
 
   // 前年度（なければ直近）の名簿
   const previousCommittee = useMemo(() => {
@@ -151,6 +235,15 @@ export default function EditorApp() {
                 />
               }
             />
+            <AttachmentsPanel
+              id={id}
+              dir={filesDir}
+              items={attachments}
+              busy={processing}
+              onAdd={(files) => void addFiles(files)}
+              onRemove={removeAttachment}
+              onInsert={insertAttachment}
+            />
           </section>
           <section
             class="ed-preview"
@@ -160,7 +253,7 @@ export default function EditorApp() {
             hidden={narrow && pane !== 'preview'}
           >
             <h2 id="ed-preview-title">プレビュー</h2>
-            <Preview draft={draft} index={index} today={today} />
+            <Preview draft={draft} index={index} today={today} imageUrls={imageUrls} />
           </section>
         </div>
 

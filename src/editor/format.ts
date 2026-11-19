@@ -31,8 +31,8 @@ function replace(text: string, from: number, to: number, insert: string) {
   return text.slice(0, from) + insert + text.slice(to);
 }
 
-/** 挿入する塊（表・画像）の前後に空行を入れて、段落から分ける */
-function blockInsert(
+/** 挿入する塊（表・画像・添付ファイルのリンク）の前後に空行を入れて、段落から分ける */
+export function blockInsert(
   text: string,
   start: number,
   end: number,

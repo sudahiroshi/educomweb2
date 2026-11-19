@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { applyFormat } from './format';
+import { applyFormat, blockInsert } from './format';
 
 /** 結果を「選択範囲を [ ] で示した文字列」にする */
 function show(r: { text: string; selectionStart: number; selectionEnd: number }): string {
@@ -43,5 +43,13 @@ describe('書式ボタン', () => {
     expect(
       show(applyFormat('前\n\n後', 2, 2, 'image', { imagePath: '/files/news/a/a-01.jpg' })),
     ).toBe('前\n\n![[画像の説明]](/files/news/a/a-01.jpg)\n\n後');
+  });
+
+  test('塊の挿入：前後の空行を足すのは必要なときだけ', () => {
+    expect(blockInsert('![a](x)', 7, 7, '[b](y)')).toEqual({
+      text: '![a](x)\n\n[b](y)',
+      offset: 9,
+    });
+    expect(blockInsert('', 0, 0, '[b](y)')).toEqual({ text: '[b](y)', offset: 0 });
   });
 });
