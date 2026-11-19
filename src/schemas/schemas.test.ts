@@ -164,6 +164,18 @@ describe('events', () => {
     });
   });
 
+  test('項目どうしの検査は、ほかの項目にエラーがあっても実行する（編集画面でまとめて表示）', () => {
+    const data = {
+      ...ok,
+      title: '',
+      endDate: '2027-03-08',
+      sessions: [{ date: '2027-03-20' }],
+    };
+    expect(errorPaths(eventSchema, data).sort()).toEqual(
+      ['endDate', 'sessions.0.date', 'sessions.0.name', 'title'].sort(),
+    );
+  });
+
   test('講演：演題と発表者は必須', () => {
     const data = { ...ok, sessions: [{ name: 'A', talks: [{ title: '演題' }] }] };
     expect(errorPaths(eventSchema, data)).toEqual(['sessions.0.talks.0.presenter']);

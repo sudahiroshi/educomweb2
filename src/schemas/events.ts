@@ -1,6 +1,15 @@
 /** 活動記録・研究発表会・国際会議（spec 2.5）。キーの順序は spec の表の順 */
 import { z } from 'astro/zod';
-import { dateSchema, linkSchema, optionalText, requiredText, timeSchema } from './common';
+import {
+  ALWAYS_REFINE,
+  dateSchema,
+  isDateValue,
+  isTimeValue,
+  linkSchema,
+  optionalText,
+  requiredText,
+  timeSchema,
+} from './common';
 
 /** 種類（D-13）。表示ラベルは src/lib 側で持つ（T-07） */
 export const EVENT_KINDS = ['activity', 'asj', 'cosponsored', 'international'] as const;
@@ -35,14 +44,14 @@ export const sessionSchema = z
     talks: z.array(talkSchema).optional(),
   })
   .superRefine((s, ctx) => {
-    if (s.startTime !== undefined && s.endTime !== undefined && s.endTime <= s.startTime) {
+    if (isTimeValue(s.startTime) && isTimeValue(s.endTime) && s.endTime <= s.startTime) {
       ctx.addIssue({
         code: 'custom',
         path: ['endTime'],
         message: '終了時刻は開始時刻より後にしてください',
       });
     }
-  });
+  }, ALWAYS_REFINE);
 
 export const eventSchema = z
   .object({
@@ -60,23 +69,26 @@ export const eventSchema = z
     sessions: z.array(sessionSchema).optional(),
   })
   .superRefine((e, ctx) => {
-    if (e.updated !== undefined && e.updated < e.published) {
+    if (isDateValue(e.updated) && isDateValue(e.published) && e.updated < e.published) {
       ctx.addIssue({
         code: 'custom',
         path: ['updated'],
         message: '更新日は掲載日以降にしてください',
       });
     }
-    if (e.endDate !== undefined && e.endDate < e.startDate) {
+    if (!isDateValue(e.startDate)) return;
+    if (isDateValue(e.endDate) && e.endDate < e.startDate) {
       ctx.addIssue({
         code: 'custom',
         path: ['endDate'],
         message: '終了日は開始日以降にしてください',
       });
     }
-    const end = e.endDate ?? e.startDate;
-    e.sessions?.forEach((s, i) => {
-      if (s.date !== undefined && (s.date < e.startDate || s.date > end)) {
+    const end = isDateValue(e.endDate) && e.endDate >= e.startDate ? e.endDate : e.startDate;
+    if (!Array.isArray(e.sessions)) return;
+    e.sessions.forEach((s: unknown, i) => {
+      const date = typeof s === 'object' && s !== null ? (s as { date?: unknown }).date : undefined;
+      if (isDateValue(date) && (date < e.startDate || date > end)) {
         ctx.addIssue({
           code: 'custom',
           path: ['sessions', i, 'date'],
@@ -84,7 +96,7 @@ export const eventSchema = z
         });
       }
     });
-  });
+  }, ALWAYS_REFINE);
 
 export type Talk = z.infer<typeof talkSchema>;
 export type Session = z.infer<typeof sessionSchema>;

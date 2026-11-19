@@ -33,6 +33,8 @@ const { members, caption } = Astro.props;
 
 <style>
   .table-scroll {
+    /* 中の visually-hidden（position: absolute）が枠の外に出てページを広げないよう、位置の基準にする */
+    position: relative;
     max-width: 46rem;
     overflow-x: auto;
     border: var(--border-width) solid var(--color-border);

@@ -90,4 +90,20 @@ export const slugSchema = z
       'スラッグは半角英小文字・数字・ハイフンのみ（先頭・末尾・連続のハイフンは不可）にしてください',
   });
 
+/**
+ * 項目どうしを比べる検査（終了日≧開始日など）を、ほかの項目にエラーがあっても実行する設定。
+ * 編集画面で、エラーを一度にまとめて表示するため（spec 6.5）。比べる前に値の形式を確かめること。
+ */
+export const ALWAYS_REFINE = { when: () => true };
+
+/** 実在する YYYY-MM-DD の文字列か（項目どうしの比較の前に使う） */
+export function isDateValue(v: unknown): v is string {
+  return typeof v === 'string' && isValidDateString(v);
+}
+
+/** HH:MM の文字列か */
+export function isTimeValue(v: unknown): v is string {
+  return typeof v === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(v);
+}
+
 export type Link = z.infer<typeof linkSchema>;

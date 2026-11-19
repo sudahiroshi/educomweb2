@@ -133,6 +133,8 @@ const Heading = `h${headingLevel}` as 'h3' | 'h4';
   }
 
   .table-scroll {
+    /* 中の visually-hidden（position: absolute）が枠の外に出てページを広げないよう、位置の基準にする */
+    position: relative;
     max-width: 100%;
     overflow-x: auto;
     border: var(--border-width) solid var(--color-border);
