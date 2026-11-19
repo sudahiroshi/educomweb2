@@ -1,0 +1,18 @@
+---
+/**
+ * 編集画面（spec 6章、D-42〜D-47）。
+ * T-18 既定案: URL は /editor/。
+ * - 静的ページ。サーバーへの送信は行わない（D-03）
+ * - メニューに出さない。noindex、サイトマップ（astro.config.mjs）・検索索引（data-pagefind-body なし）から除外
+ * - 入力・プレビュー・チェック・出力は Preact のアイランド（src/editor/）で行う
+ */
+import PageLayout from '../../layouts/PageLayout.astro';
+import EditorApp from '../../editor/EditorApp';
+---
+
+<PageLayout title="記事の編集画面" noindex>
+  <EditorApp client:only="preact" />
+  <noscript>
+    <p>編集画面を使うには JavaScript を有効にしてください。</p>
+  </noscript>
+</PageLayout>

@@ -2,6 +2,7 @@
 import js from '@eslint/js';
 import { defineConfig } from 'eslint/config';
 import astro from 'eslint-plugin-astro';
+import jsxA11y from 'eslint-plugin-jsx-a11y-x';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -14,6 +15,17 @@ export default defineConfig(
   ...tseslint.configs.strict,
   ...astro.configs.recommended,
   ...astro.configs['jsx-a11y-strict'],
+  // 編集画面・共通部品（Preact の .tsx）にもアクセシビリティの検査をかける
+  { ...jsxA11y.configs.strict, files: ['**/*.tsx'] },
+  {
+    files: ['**/*.tsx'],
+    rules: {
+      'jsx-a11y-x/no-noninteractive-tabindex': [
+        'error',
+        { tags: [], roles: ['tabpanel', 'region'], allowExpressionValues: true },
+      ],
+    },
+  },
   {
     languageOptions: {
       globals: { ...globals.browser, ...globals.node },
