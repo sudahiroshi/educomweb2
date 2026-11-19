@@ -6,3 +6,5 @@ public/
 docs/
 package-lock.json
 CLAUDE.md
+# 記事の書式は編集画面の出力規則（spec 6.8）に従うため対象外
+src/content/
