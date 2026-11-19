@@ -61,6 +61,11 @@ a:hover {
   color: var(--color-accent);
 }
 
+/* hidden 属性は、要素側の display 指定より優先する */
+[hidden] {
+  display: none !important;
+}
+
 button,
 input,
 select,

@@ -1,0 +1,341 @@
+---
+/**
+ * メインメニュー（spec 4.3、D-29〜D-31）。
+ * - サブメニューはボタンで開閉（aria-expanded）。Esc で閉じてボタンにフォーカスを戻す。メニュー外クリックで閉じる
+ * - 幅 768px 未満は「メニュー」ボタンで全体を開閉。サブメニューは入れ子のリストとして展開する
+ * - 現在のページは aria-current="page"、その配下のページでは aria-current="true"（見た目は同じ）
+ * - スクリプトが動かない環境では、全項目を開いた状態で表示する
+ */
+import { getCollection } from 'astro:content';
+import {
+  ariaCurrent,
+  buildMenu,
+  currentState,
+  isMenuGroup,
+  pageMenuLinks,
+} from '../lib/navigation';
+
+const currentPath = Astro.url.pathname;
+const pages = await getCollection('pages');
+const menu = buildMenu(pageMenuLinks(pages));
+---
+
+<nav class="main-nav" aria-label="メインメニュー" data-main-nav>
+  <button
+    type="button"
+    class="nav-toggle pill"
+    aria-expanded="false"
+    aria-controls="main-nav-list"
+    data-nav-toggle
+    hidden
+  >
+    <svg class="nav-toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 7h16M4 12h16M4 17h16"></path>
+    </svg>
+    メニュー
+  </button>
+  <ul class="nav-list" id="main-nav-list">
+    {menu.map((item, index) =>
+      isMenuGroup(item) ? (
+        <li class="nav-item has-submenu" data-submenu>
+          <button
+            type="button"
+            class="pill submenu-toggle"
+            aria-expanded="false"
+            aria-controls={`submenu-${index}`}
+            data-current={currentState(item.basePath, currentPath) ? '' : undefined}
+            data-submenu-toggle
+            hidden
+          >
+            {item.label}
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          <span class="submenu-label" data-submenu-label>
+            {item.label}
+          </span>
+          <ul class="submenu" id={`submenu-${index}`}>
+            {item.children.map((child) => (
+              <li>
+                <a href={child.href} aria-current={ariaCurrent(child.href, currentPath)}>
+                  {child.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ) : (
+        <li class="nav-item">
+          <a class="pill" href={item.href} aria-current={ariaCurrent(item.href, currentPath)}>
+            {item.label}
+          </a>
+        </li>
+      ),
+    )}
+  </ul>
+</nav>
+
+<script>
+  const MOBILE = window.matchMedia('(max-width: 767.98px)');
+
+  function setupNav(nav: HTMLElement) {
+    const toggle = nav.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+    const list = nav.querySelector<HTMLElement>('.nav-list');
+    if (!toggle || !list) return;
+
+    const submenus = [...nav.querySelectorAll<HTMLElement>('[data-submenu]')].flatMap((item) => {
+      const button = item.querySelector<HTMLButtonElement>('[data-submenu-toggle]');
+      const label = item.querySelector<HTMLElement>('[data-submenu-label]');
+      return button ? [{ item, button, label }] : [];
+    });
+
+    const setSubmenu = (button: HTMLButtonElement, open: boolean) => {
+      button.setAttribute('aria-expanded', String(open));
+    };
+    const closeAllSubmenus = () => submenus.forEach(({ button }) => setSubmenu(button, false));
+
+    const setMenu = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      // 幅の狭い画面では、メニューを開いたときにサブメニューも入れ子で展開する
+      if (open) submenus.forEach(({ button }) => setSubmenu(button, true));
+    };
+
+    // スクリプトが動くときだけ、ボタンで開閉する形に切り替える
+    nav.dataset.enhanced = '';
+    toggle.hidden = false;
+    submenus.forEach(({ button, label }) => {
+      button.hidden = false;
+      if (label) label.hidden = true;
+    });
+
+    toggle.addEventListener('click', () => {
+      setMenu(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    submenus.forEach(({ button }) => {
+      button.addEventListener('click', () => {
+        const open = button.getAttribute('aria-expanded') !== 'true';
+        if (!MOBILE.matches) closeAllSubmenus();
+        setSubmenu(button, open);
+      });
+    });
+
+    // Esc：開いているサブメニュー（なければ狭い画面のメニュー）を閉じ、そのボタンにフォーカスを戻す
+    nav.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      const openSubmenu = submenus.find(
+        ({ button }) => button.getAttribute('aria-expanded') === 'true',
+      );
+      if (openSubmenu && !MOBILE.matches) {
+        setSubmenu(openSubmenu.button, false);
+        openSubmenu.button.focus();
+        event.preventDefault();
+      } else if (MOBILE.matches && toggle.getAttribute('aria-expanded') === 'true') {
+        setMenu(false);
+        toggle.focus();
+        event.preventDefault();
+      }
+    });
+
+    // メニュー外のクリックで閉じる
+    document.addEventListener('click', (event) => {
+      if (event.target instanceof Node && nav.contains(event.target)) return;
+      if (!MOBILE.matches) closeAllSubmenus();
+      else setMenu(false);
+    });
+
+    // 広い画面のサブメニューは、フォーカスが外へ出たら閉じる
+    nav.addEventListener('focusout', (event) => {
+      if (MOBILE.matches) return;
+      const next = event.relatedTarget;
+      submenus.forEach(({ item, button }) => {
+        if (!(next instanceof Node) || !item.contains(next)) setSubmenu(button, false);
+      });
+    });
+
+    // 画面幅が変わったら開閉状態を初期化する
+    MOBILE.addEventListener('change', () => {
+      setMenu(false);
+      closeAllSubmenus();
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-main-nav]').forEach(setupNav);
+</script>
+
+<style>
+  .nav-list,
+  .submenu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: var(--tap-size);
+    padding: 0.35rem 1.1rem;
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .pill:hover {
+    border-color: var(--color-accent);
+    color: var(--color-text);
+  }
+
+  .pill[aria-current],
+  .submenu-toggle[data-current] {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .chevron,
+  .nav-toggle-icon {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .nav-toggle-icon {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .submenu-toggle[aria-expanded='true'] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .submenu-label {
+    display: inline-block;
+    padding: 0.35rem 0.25rem;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .submenu a {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap-size);
+    padding: 0.35rem 1rem;
+    border-radius: var(--radius-small);
+    color: var(--color-text);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .submenu a:hover {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-soft-text);
+  }
+
+  .submenu a[aria-current] {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-weight: 700;
+  }
+
+  /* スクリプトが動かない環境：サブメニューは見出し付きの入れ子リストとして常に表示 */
+  .main-nav:not([data-enhanced]) .has-submenu {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .main-nav:not([data-enhanced]) .submenu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  /* 広い画面：サブメニューはドロップダウン（影はここだけ。spec 5.3） */
+  @media (min-width: 768px) {
+    .nav-toggle {
+      display: none;
+    }
+
+    .main-nav[data-enhanced] .submenu {
+      position: absolute;
+      top: calc(100% + 0.4rem);
+      left: 0;
+      z-index: 20;
+      display: none;
+      min-width: 14rem;
+      padding: 0.4rem;
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--radius-small);
+      background: var(--color-surface);
+      box-shadow: 0 0.4rem 1rem color-mix(in srgb, var(--color-text) 12%, transparent);
+    }
+
+    .main-nav[data-enhanced] .submenu-toggle[aria-expanded='true'] ~ .submenu {
+      display: block;
+    }
+  }
+
+  /* 幅 768px 未満：「メニュー」ボタンで全体を開閉、サブメニューは入れ子のリスト */
+  @media (max-width: 767.98px) {
+    .main-nav[data-enhanced] .nav-list {
+      display: none;
+      flex-direction: column;
+      margin-top: 0.6rem;
+      padding: 0.6rem;
+      border: var(--border-width) solid var(--color-border);
+      border-radius: var(--radius-card);
+      background: var(--color-surface);
+    }
+
+    .main-nav[data-enhanced] .nav-toggle[aria-expanded='true'] ~ .nav-list {
+      display: flex;
+    }
+
+    .main-nav[data-enhanced] .nav-list .pill {
+      width: 100%;
+      justify-content: space-between;
+      border-color: transparent;
+      border-radius: var(--radius-small);
+    }
+
+    .main-nav[data-enhanced] .pill[aria-current],
+    .main-nav[data-enhanced] .submenu-toggle[data-current] {
+      border-color: var(--color-accent);
+    }
+
+    .main-nav[data-enhanced] .submenu {
+      display: none;
+      margin-top: 0.25rem;
+      padding-inline-start: 1rem;
+    }
+
+    .main-nav[data-enhanced] .submenu-toggle[aria-expanded='true'] ~ .submenu {
+      display: block;
+    }
+  }
+</style>

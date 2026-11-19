@@ -2,9 +2,10 @@
 /**
  * 共通ヘッダー（spec 4.4、案B）。
  * 1段目：ロゴ（波形マーク＋「日本音響学会／音響教育委員会」）と表示設定（文字サイズ・テーマ。5章で追加）
- * 2段目：メインメニュー（MainNav、plan 3.5）
+ * 2段目：メインメニュー（MainNav）
  */
 import { site } from '../config/site';
+import MainNav from './MainNav.astro';
 import WaveMark from './WaveMark.astro';
 ---
 
@@ -22,7 +23,7 @@ import WaveMark from './WaveMark.astro';
     </div>
   </div>
   <div class="container header-nav">
-    <slot name="nav" />
+    <MainNav />
   </div>
 </header>
 
@@ -82,9 +83,5 @@ import WaveMark from './WaveMark.astro';
 
   .header-nav {
     margin-top: 0.9rem;
-  }
-
-  .header-nav:empty {
-    display: none;
   }
 </style>
