@@ -1,0 +1,54 @@
+---
+/**
+ * 全ページ共通のレイアウト（spec 4.4・7章）。
+ * - <title>：「{ページ名} | 日本音響学会 音響教育委員会」。トップはサイト名のみ
+ * - スキップリンク「本文へ移動」→ <main id="main">
+ */
+import '../styles/global.css';
+import { site } from '../config/site';
+
+interface Props {
+  /** ページ名。省略時（トップ）はサイト名のみ */
+  title?: string;
+  /** meta description */
+  description?: string;
+  /** 検索エンジンに載せない（編集画面など） */
+  noindex?: boolean;
+}
+
+const { title, description, noindex = false } = Astro.props;
+const fullTitle = title ? `${title} | ${site.name}` : site.name;
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex" />}
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      本文へ移動
+    </a>
+    <slot name="header" />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <slot name="footer" />
+  </body>
+</html>
+
+<style>
+  main {
+    display: block;
+    padding-block: 2.5rem 4rem;
+  }
+
+  main:focus {
+    outline: none;
+  }
+</style>

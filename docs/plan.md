@@ -29,7 +29,7 @@
 
 - [x] **3.1** カラートークンをライト・ダークで定義する（spec 5.1）
 - [x] **3.2** フォントを設定する（T-12）
-- [ ] **3.3** 基本レイアウト（`BaseLayout`）と Markdown 本文の体裁（`Prose`）を作る
+- [x] **3.3** 基本レイアウト（`BaseLayout`）と Markdown 本文の体裁（`Prose`）を作る
 - [ ] **3.4** ヘッダー・フッター・ロゴを作る（T-03, T-23, T-28）
 - [ ] **3.5** メインメニューを作る（サブメニューの開閉、Esc・外側クリックで閉じる、幅768px未満の折りたたみ、`aria-current`）（T-06）
 - [ ] **3.6** 共通コンポーネントを作る：`KindBadge`、`EventCard`、`EventListItem`、`NewsListItem`、`LinkList`、`FiscalYearNav`、`Breadcrumbs`（T-07）
