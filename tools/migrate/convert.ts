@@ -109,7 +109,9 @@ const copied = [...copiedAttachments].sort().map((path) => {
 });
 writeFileSync(MANIFEST, JSON.stringify([...files.map((f) => f.path), ...copied], null, 2));
 
-writeFileSync(join(MIGRATION_DOCS_DIR, 'review.md'), reviewMarkdown(review.items));
+const reviewFile = join(MIGRATION_DOCS_DIR, 'review.md');
+const previousReview = existsSync(reviewFile) ? readFileSync(reviewFile, 'utf8') : '';
+writeFileSync(reviewFile, reviewMarkdown(review.items, previousReview));
 
 console.log(files.map((f) => f.path).join('\n'));
 console.log(

@@ -8,7 +8,24 @@ const GROUPS: readonly { prefix: string; title: string }[] = [
   { prefix: 'src/content/pages/', title: 'その他のページ' },
 ];
 
-export function reviewMarkdown(items: readonly ReviewItem[]): string {
+/** 既存の review.md から、確認済み（[x]）の「ファイル＋指摘」を読む */
+export function checkedItems(previous: string): Set<string> {
+  const checked = new Set<string>();
+  let target = '';
+  for (const line of previous.split('\n')) {
+    const head = /^### `(.+)`$/.exec(line);
+    if (head?.[1]) target = head[1];
+    const item = /^- \[x\] (.+)$/i.exec(line);
+    if (item?.[1]) checked.add(`${target}\n${item[1]}`);
+  }
+  return checked;
+}
+
+/**
+ * @param previous 前回の review.md（あれば、確認済みのチェックを引き継ぐ）
+ */
+export function reviewMarkdown(items: readonly ReviewItem[], previous = ''): string {
+  const checked = checkedItems(previous);
   const byTarget = new Map<string, string[]>();
   for (const item of items) {
     const list = byTarget.get(item.target) ?? [];
@@ -23,7 +40,9 @@ export function reviewMarkdown(items: readonly ReviewItem[]): string {
     if (inGroup.length === 0) continue;
     inGroup.forEach((t) => used.add(t));
     const blocks = inGroup.map((t) => {
-      const lines = (byTarget.get(t) ?? []).map((m) => `- [ ] ${m}`);
+      const lines = (byTarget.get(t) ?? []).map(
+        (m) => `- [${checked.has(`${t}\n${m}`) ? 'x' : ' '}] ${m}`,
+      );
       return `### \`${t}\`\n\n${lines.join('\n')}`;
     });
     sections.push(`## ${group.title}\n\n${blocks.join('\n\n')}`);
@@ -37,7 +56,7 @@ export function reviewMarkdown(items: readonly ReviewItem[]): string {
 
 ## 確認のしかた
 
-- 確かめたら \`[ ]\` を \`[x]\` にしてください（plan 9.10）。
+- 確かめたら \`[ ]\` を \`[x]\` にしてください（plan 9.10）。変換し直しても、同じ指摘のチェックは引き継ぎます。
 - 直すときは \`src/content/\` の .md を直接編集するか、編集画面で読み込んで修正します。
 - **直した後に変換スクリプトを再実行すると、直した内容が上書きされます。** 再実行が必要になったときは、先に \`tools/migrate/mapping.ts\` に修正を反映してください。
 - 日付の「仮の値」は、旧サイトから日まで分からなかったものです。正しい日付が分かれば、ファイル名（\`{日付}-{スラッグ}.md\`）とフロントマターの両方を直します。

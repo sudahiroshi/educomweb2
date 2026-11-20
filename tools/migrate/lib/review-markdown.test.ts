@@ -14,4 +14,15 @@ describe('reviewMarkdown', () => {
     expect(order).toEqual([...order].sort((a, b) => a - b));
     expect(md).toContain('### `src/content/news/b.md`\n\n- [ ] N\n\n');
   });
+
+  it('前回の review.md の確認済みチェックを引き継ぐ', () => {
+    const items = [
+      { target: 'src/content/news/b.md', message: 'N' },
+      { target: 'src/content/news/b.md', message: 'M' },
+    ];
+    const previous = reviewMarkdown(items).replace('- [ ] N', '- [x] N');
+    const md = reviewMarkdown(items, previous);
+    expect(md).toContain('- [x] N');
+    expect(md).toContain('- [ ] M');
+  });
 });

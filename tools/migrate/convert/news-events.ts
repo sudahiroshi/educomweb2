@@ -71,6 +71,8 @@ function eventFile(ctx: ConvertContext, plan: EventPlan, item: Element | undefin
     endDate: plan.endDate,
     venue: plan.venue,
     links,
+    // 研究発表会・国際会議として移した記事も活動記録の一覧に載せる（plan 9.10 でユーザーが指示）
+    listInActivities: plan.kind === 'activity' ? undefined : true,
   };
   return { path, content: toMarkdownFile(data, body) };
 }

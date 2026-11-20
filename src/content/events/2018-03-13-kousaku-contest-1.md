@@ -4,6 +4,7 @@ title: 第1回音響工作・教材コンテスト
 published: 2018-03-13
 startDate: 2018-03-13
 venue: 日本工業大学
+listInActivities: true
 ---
 
 第１回音響工作・教材コンテストを開催しました。
