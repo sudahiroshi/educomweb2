@@ -11,6 +11,10 @@ describe('todayInTokyo', () => {
     expect(todayInTokyo(new Date('2026-12-31T14:59:59Z'))).toBe('2026-12-31');
     expect(todayInTokyo(new Date('2026-12-31T15:00:00Z'))).toBe('2027-01-01');
   });
+
+  test('1桁の月日も0で埋める', () => {
+    expect(todayInTokyo(new Date('2027-01-04T00:00:00Z'))).toBe('2027-01-04');
+  });
 });
 
 describe('weekdayOf', () => {

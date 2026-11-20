@@ -19,16 +19,26 @@ export function parseYmd(value: string): Ymd {
   return { year: Number(m[1]), month: Number(m[2]), day: Number(m[3]) };
 }
 
-const tokyoDateFormat = new Intl.DateTimeFormat('sv-SE', {
+// 'sv-SE' の format() は YYYY-MM-DD になるが、ロケールのデータがない環境では
+// 'MM/DD/YYYY' などに化ける（環境によって起きる）。formatToParts で年月日を取り出して組み立てる
+const tokyoDateFormat = new Intl.DateTimeFormat('en-US', {
   timeZone: site.timeZone,
   year: 'numeric',
   month: '2-digit',
   day: '2-digit',
+  numberingSystem: 'latn',
 });
 
 /** 日本時間の今日を 'YYYY-MM-DD' で返す（spec 3.3 の 4）。テスト用に時刻を渡せる */
 export function todayInTokyo(now: Date = new Date()): string {
-  return tokyoDateFormat.format(now);
+  const parts = tokyoDateFormat.formatToParts(now);
+  const part = (type: Intl.DateTimeFormatPartTypes): string =>
+    parts.find((p) => p.type === type)?.value ?? '';
+  const value = `${part('year')}-${part('month')}-${part('day')}`;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    throw new Error(`日本時間の今日を求められませんでした: ${value}`);
+  }
+  return value;
 }
 
 const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'] as const;

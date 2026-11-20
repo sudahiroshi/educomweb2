@@ -8,8 +8,18 @@ import { todayInTokyo } from './date';
 
 export const BUILD_TODAY_ENV = 'ASJ_EDCOM_TODAY';
 
+/** これより前の日付になったら、ビルド環境の時計がおかしいとみなして止める（新サイトの公開は 2026 年） */
+const EARLIEST_BUILD_DAY = '2026-01-01';
+
 export function resolveBuildToday(override: string | undefined, now: Date = new Date()): string {
-  if (override === undefined || override === '') return todayInTokyo(now);
+  if (override === undefined || override === '') {
+    const today = todayInTokyo(now);
+    // 全記事が「開催予定」に入るような誤った公開を防ぐ
+    if (today < EARLIEST_BUILD_DAY) {
+      throw new Error(`ビルド環境の日付が正しくありません（${today}）`);
+    }
+    return today;
+  }
   if (!isValidDateString(override)) {
     throw new Error(
       `${BUILD_TODAY_ENV} は YYYY-MM-DD 形式の実在する日付にしてください（${override}）`,
