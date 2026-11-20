@@ -1,0 +1,60 @@
+# 毎日1回の定期ビルド（plan 10.3、spec 9.2）。開催予定→終了の切り替えと年度別ページの更新のため。
+# 先に同じ手順でビルドできることを確かめてから、Cloudflare のデプロイフックを呼んで本番をビルドし直す。
+# デプロイフックの URL は秘密情報なので、リポジトリの Secrets（CLOUDFLARE_DEPLOY_HOOK_URL）に入れる。
+# 失敗は build.yml と同じく Issue で管理者に知らせる（T-11 既定案）。
+name: 定期ビルド
+
+on:
+  schedule:
+    # 毎日 0:10（日本時間）。GitHub の定期実行は数分〜数十分遅れることがある
+    - cron: '10 15 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: ビルドできることを確かめる
+        run: npm run build && npm run check:pages
+      - name: Cloudflare のデプロイフックを呼ぶ
+        env:
+          HOOK_URL: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK_URL" ]; then
+            echo "::error::Secrets に CLOUDFLARE_DEPLOY_HOOK_URL が設定されていません"
+            exit 1
+          fi
+          curl --fail --silent --show-error -X POST "$HOOK_URL" > /dev/null
+          echo "デプロイフックを呼びました。"
+
+      - name: 失敗を管理者に知らせる
+        if: failure()
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const title = '【定期ビルド失敗】毎日のビルドが失敗しています';
+            const run = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const body = `- 実行結果: ${run}\n\nログを確認してください。デプロイフックの URL が無効になっている場合は、Cloudflare で作り直して Secrets を更新します。`;
+            const { data: open } = await github.rest.issues.listForRepo({
+              ...context.repo,
+              state: 'open',
+              creator: 'github-actions[bot]',
+              per_page: 100,
+            });
+            const existing = open.find((i) => i.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: existing.number, body });
+            } else {
+              await github.rest.issues.create({ ...context.repo, title, body, assignees: [context.repo.owner] });
+            }
