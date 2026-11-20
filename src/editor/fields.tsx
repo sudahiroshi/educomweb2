@@ -3,7 +3,7 @@
  */
 import type { ComponentChildren } from 'preact';
 import { createContext } from 'preact';
-import { useContext } from 'preact/hooks';
+import { useContext, useLayoutEffect, useRef } from 'preact/hooks';
 import type { DraftIssue } from './model';
 
 /** 入力欄の位置（path）→ エラーメッセージ */
@@ -189,7 +189,11 @@ export function CellInput({
   );
 }
 
-/** 行の並べ替え・削除ボタン */
+/**
+ * 行の並べ替え・削除ボタン。
+ * 並べ替えた後もフォーカスが同じ行のボタンに残るようにする（spec 8章）。
+ * 端に着いて押したボタンが使えなくなったときは、反対向きのボタンへ移す。
+ */
 export function RowButtons({
   label,
   index,
@@ -203,23 +207,39 @@ export function RowButtons({
   onMove: (from: number, to: number) => void;
   onRemove: (index: number) => void;
 }) {
+  const up = useRef<HTMLButtonElement>(null);
+  const down = useRef<HTMLButtonElement>(null);
+  const moved = useRef<'up' | 'down' | null>(null);
+  useLayoutEffect(() => {
+    const direction = moved.current;
+    if (!direction) return;
+    moved.current = null;
+    const [same, other] = direction === 'up' ? [up, down] : [down, up];
+    (same.current?.disabled ? other.current : same.current)?.focus();
+  }, [index]);
+  const move = (direction: 'up' | 'down') => {
+    moved.current = direction;
+    onMove(index, direction === 'up' ? index - 1 : index + 1);
+  };
   return (
     <div class="ed-row-buttons">
       <button
+        ref={up}
         type="button"
         class="ed-icon-button"
         aria-label={`${label}を上へ`}
         disabled={index === 0}
-        onClick={() => onMove(index, index - 1)}
+        onClick={() => move('up')}
       >
         ↑
       </button>
       <button
+        ref={down}
         type="button"
         class="ed-icon-button"
         aria-label={`${label}を下へ`}
         disabled={index === count - 1}
-        onClick={() => onMove(index, index + 1)}
+        onClick={() => move('down')}
       >
         ↓
       </button>

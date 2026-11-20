@@ -20,6 +20,7 @@
     "verify": "npm run lint && npm run format:check && npm run check && npm test",
     "check:pages": "node tools/dev/check-pages.mjs",
     "check:a11y": "node tools/dev/check-a11y.mjs",
+    "check:keyboard": "node tools/dev/check-keyboard.mjs",
     "check:overflow": "node tools/dev/check-overflow.mjs",
     "check:events": "node tools/dev/check-event-status.mjs",
     "migrate:utf8": "node tools/migrate/to-utf8.ts",

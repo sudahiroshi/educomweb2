@@ -87,6 +87,7 @@
 | `npm run check:pages` | ビルド結果の全ページを点検（`<title>`、h1 は1つ、見出しレベル、パンくず）。`npm run build` の後に実行 |
 | `npm run check:overflow -- [幅=320] [文字サイズ=xlarge] [テーマ=light] [--menu]` | 全ページの横はみ出し・欠けを点検（`npx astro preview --port 4329` を起動した状態で実行） |
 | `npm run check:a11y -- [--light-only] [パス…]` | 全ページ（編集画面は種類・行の追加・タブの状態ごと）を axe-core で点検（WCAG 2.1 A・AA と best-practice、ライト・ダーク）。プレビューを起動した状態で実行。開催予定の記事も含めるなら先に `npm run build:samples` |
+| `npm run check:keyboard -- [パス…]` | キーボードだけの操作を点検（全ページを Tab で一巡し、届かない部品・見えないフォーカス枠・抜け出せない箇所を調べる。スキップリンク、サブメニュー、スマホのメニュー、表示切替・文字サイズ、横スクロールの表、編集画面のセッション表・タブも操作）。プレビューを起動した状態で実行 |
 | `npm run build:samples` | サンプル記事（`tools/dev/sample-content/`）を一時的に `src/content/` に置き、ビルド日 2026-11-19 でビルドする（終わると取り除く）。`check:events`・`visual-snapshot` の前に使う |
 | `npm run check:events` | 閲覧時の開催状態の判定を、ブラウザの時計を固定して確認（`npm run build:samples` の後、プレビューを起動した状態で実行） |
 | `npm run migrate:utf8` → `migrate:inventory` → `migrate:links` → `migrate:convert` | 旧サイトの移行（plan 9章）。UTF-8 化（`.migrate/utf8/`）→ 棚卸し表 → リンク調査（外部に接続。結果は `docs/migration/link-status.json`）→ `src/content/` への変換と要確認リスト（`docs/migration/review.md`）。移行先や仮の日付は `tools/migrate/mapping.ts` |

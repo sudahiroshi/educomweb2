@@ -87,7 +87,10 @@ textarea {
 }
 
 /* フォーカス枠は常に見えるようにする（spec 8章） */
-:focus-visible {
+:focus-visible,
+/* 日付・時刻の欄は、中のカレンダーボタンに Tab で移ると :focus・:focus-visible が外れるため、:focus-within で枠を出す */
+input[type='date']:focus-within,
+input[type='time']:focus-within {
   outline: var(--focus-width) solid var(--color-focus);
   outline-offset: 2px;
 }
