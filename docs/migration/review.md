@@ -1,7 +1,7 @@
 # 移行の要確認リスト
 
 旧サイトから変換した記事のうち、人が確かめる必要がある点の一覧です（plan 9.9）。
-`node tools/migrate/convert.ts` が変換のたびに作り直します（52 件、21 ファイル）。
+`node tools/migrate/convert.ts` が変換のたびに作り直します（51 件、20 ファイル）。
 
 ## 確認のしかた
 
@@ -61,10 +61,6 @@
 ### `src/content/events/2013-03-01-special-session-2013-spring.md`
 
 - [x] 開催日：「平成25年音響学会春季研究発表会」のみ分かる。開催日は 2013年3月1日の仮の値
-
-### `src/content/events/2016-11-28-joint-meeting-5.md`
-
-- [ ] 自動の確認を拒否された（403）。ブラウザで開けるか要確認：http://acousticalsociety.org/content/5th-joint-meeting
 
 ## 運営委員
 

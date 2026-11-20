@@ -301,7 +301,8 @@ export const EVENT_PLANS: readonly EventPlan[] = [
     title: '第5回日米ジョイントミーティング',
     startDate: '2016-11-28',
     endDate: '2016-12-02',
-    linksFromItem: true,
+    // リンク先は自動の確認で 403。plan 9.10 でユーザーの判断によりリンクを載せない
+    linksFromItem: false,
   },
   {
     match: '第21回 国際音響学会議',
