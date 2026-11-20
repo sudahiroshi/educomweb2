@@ -72,8 +72,8 @@ describe('.md の書き出し（spec 6.8）', () => {
 
   test('サンプル記事を読み込んで書き出すと、同じ内容になる', () => {
     for (const [path, schema] of [
-      ['src/content/events/2027-03-09-sample-asj-spring-2027.md', eventSchema],
-      ['src/content/news/2026-11-01-sample-asj-spring-2027-guide.md', newsSchema],
+      ['tools/dev/sample-content/events/2027-03-09-sample-asj-spring-2027.md', eventSchema],
+      ['tools/dev/sample-content/news/2026-11-01-sample-asj-spring-2027-guide.md', newsSchema],
       ['src/content/committee/2026.md', committeeSchema],
     ] as const) {
       const original = readFileSync(path, 'utf8');

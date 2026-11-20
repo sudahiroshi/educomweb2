@@ -8,6 +8,7 @@ package-lock.json
 CLAUDE.md
 # 記事の書式は編集画面の出力規則（spec 6.8）に従うため対象外
 src/content/
+tools/dev/sample-content/
 # テストが生成する固定用の出力
 **/__snapshots__/
 # 変換テストの入力（整形すると変換結果が変わるため対象外）

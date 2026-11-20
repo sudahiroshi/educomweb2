@@ -1,4 +1,5 @@
 // 開発用：主要ページの画面を撮って保存し、前回の画像と画素単位で比べる（見た目を変えない改修の確認用）
+// サンプル記事のページを撮るため、npm run build:samples で作った dist/ をプレビューで開いた状態で使う。
 // 使い方: node tools/dev/visual-snapshot.mjs <保存先フォルダ> [比較元フォルダ]
 import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';

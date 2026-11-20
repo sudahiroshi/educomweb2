@@ -86,7 +86,8 @@
 | `npm test` | Vitest（`src/**/*.test.ts`・`tools/**/*.test.ts`） |
 | `npm run check:pages` | ビルド結果の全ページを点検（`<title>`、h1 は1つ、見出しレベル、パンくず）。`npm run build` の後に実行 |
 | `npm run check:overflow -- [幅=320] [文字サイズ=xlarge] [テーマ=light] [--menu]` | 全ページの横はみ出し・欠けを点検（`npx astro preview --port 4329` を起動した状態で実行） |
-| `npm run check:events` | 閲覧時の開催状態の判定を、ブラウザの時計を固定して確認（`ASJ_EDCOM_TODAY=2026-11-19 npm run build` のサンプル記事で、プレビューを起動した状態で実行） |
+| `npm run build:samples` | サンプル記事（`tools/dev/sample-content/`）を一時的に `src/content/` に置き、ビルド日 2026-11-19 でビルドする（終わると取り除く）。`check:events`・`visual-snapshot` の前に使う |
+| `npm run check:events` | 閲覧時の開催状態の判定を、ブラウザの時計を固定して確認（`npm run build:samples` の後、プレビューを起動した状態で実行） |
 | `npm run migrate:utf8` → `migrate:inventory` → `migrate:links` → `migrate:convert` | 旧サイトの移行（plan 9章）。UTF-8 化（`.migrate/utf8/`）→ 棚卸し表 → リンク調査（外部に接続。結果は `docs/migration/link-status.json`）→ `src/content/` への変換と要確認リスト（`docs/migration/review.md`）。移行先や仮の日付は `tools/migrate/mapping.ts` |
 | `node tools/dev/visual-snapshot.mjs <保存先> [比較元]` | 主要ページを撮って保存し、比較元と画素単位で比べる（見た目を変えない改修の確認用。`.test-dist/` に保存する） |
 | `node tools/dev/screenshot.mjs <URL> <出力PNG> [幅] [高さ] [light\|dark] [normal\|large\|xlarge] [--full]` | 画面を撮る（手元の Chrome を使用）。横はみ出しの px も表示 |

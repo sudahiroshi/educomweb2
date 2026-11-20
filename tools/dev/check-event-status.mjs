@@ -1,6 +1,6 @@
 // 開発用：閲覧時の開催状態の判定を、ブラウザの時計を固定して確かめる（plan 6.3・6.4）
-// ビルド日 2026-11-19 のサンプル記事で作った dist/ を、プレビューサーバー経由で開く。
-// 使い方: ASJ_EDCOM_TODAY=2026-11-19 npm run build && npx astro preview --port 4329 を起動した状態で
+// ビルド日 2026-11-19 のサンプル記事（tools/dev/sample-content/）で作った dist/ を、プレビューサーバー経由で開く。
+// 使い方: npm run build:samples && npx astro preview --port 4329 を起動した状態で
 //   node tools/dev/check-event-status.mjs
 import { chromium } from 'playwright-core';
 
