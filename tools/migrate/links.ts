@@ -11,7 +11,7 @@ import type { LinkRef } from './lib/html.ts';
 import { linksOf, readHtml } from './lib/html.ts';
 import { checkLink, verdictOf, type LinkStatus } from './lib/link-check.ts';
 import { markdownTable } from './lib/markdown-table.ts';
-import { MIGRATION_DOCS_DIR, UTF8_DIR, listFiles } from './lib/paths.ts';
+import { LINK_STATUS_FILE, MIGRATION_DOCS_DIR, UTF8_DIR, listFiles } from './lib/paths.ts';
 
 if (!existsSync(UTF8_DIR)) {
   console.error(
@@ -41,13 +41,22 @@ const external = all.filter((l) => l.external);
 const uniqueUrls = [...new Set(external.map((l) => l.raw))];
 const statuses = new Map<string, LinkStatus>();
 if (!offline) {
-  // 同じサーバーに負荷をかけないよう、少しずつ並べて調べる
-  const queue = [...uniqueUrls];
+  // 同じサーバーへは1件ずつ順に調べる（並べて送るとタイムアウトするサーバーがある）。接続できなければ1回だけ調べ直す
+  const byHost = new Map<string, string[]>();
+  for (const url of uniqueUrls) {
+    const host = new URL(url).host;
+    byHost.set(host, [...(byHost.get(host) ?? []), url]);
+  }
+  const hosts = [...byHost.values()];
   await Promise.all(
     Array.from({ length: 4 }, async () => {
-      for (let url = queue.shift(); url; url = queue.shift()) {
-        statuses.set(url, await checkLink(url));
-        process.stdout.write('.');
+      for (let urls = hosts.shift(); urls; urls = hosts.shift()) {
+        for (const url of urls) {
+          let status = await checkLink(url);
+          if (status.status === undefined) status = await checkLink(url, 30000);
+          statuses.set(url, status);
+          process.stdout.write('.');
+        }
       }
     }),
   );
@@ -134,4 +143,10 @@ ${markdownTable(['ページ', '文字', 'URL', '結果', '詳細'], externalRows
 
 mkdirSync(MIGRATION_DOCS_DIR, { recursive: true });
 writeFileSync(join(MIGRATION_DOCS_DIR, 'links.md'), md);
+if (!offline) {
+  // 変換スクリプト（plan 9.7）がリンクの書き換えに使う。接続せずに変換を再現できるよう保存する
+  const json = Object.fromEntries([...statuses].sort(([a], [b]) => a.localeCompare(b)));
+  writeFileSync(LINK_STATUS_FILE, `${JSON.stringify(json, null, 2)}\n`);
+  console.log(`${LINK_STATUS_FILE} を書き出しました。`);
+}
 console.log(`${MIGRATION_DOCS_DIR}/links.md を書き出しました。`);

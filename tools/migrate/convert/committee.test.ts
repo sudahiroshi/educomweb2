@@ -51,7 +51,7 @@ describe('convertCommittee', () => {
   it('期の各年度に名簿を書き、期の終わりの年度に次の期が始まるときは次の期にする', () => {
     const review = new Review();
     const files = convertCommittee(
-      { review, read: () => parseHtml(HTML), rewriteLinks: (el) => el },
+      { review, read: () => parseHtml(HTML), rewriteLinks: (el) => el, resolveUrl: (u) => u },
       2021,
     );
     const years = files.map((f) => f.path.replace(/^.*\/(\d+)\.md$/, '$1'));

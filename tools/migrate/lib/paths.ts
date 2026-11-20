@@ -8,6 +8,10 @@ export const LEGACY_DIR = 'legacy';
 export const UTF8_DIR = '.migrate/utf8';
 /** 棚卸し表などの出力先 */
 export const MIGRATION_DOCS_DIR = 'docs/migration';
+/** 外部リンクの死活の調査結果（plan 9.3 で作り、plan 9.7 の書き換えで読む） */
+export const LINK_STATUS_FILE = 'docs/migration/link-status.json';
+/** 旧サイトの添付ファイルの移し先（spec 2.8。旧サイトのフォルダ構成を保つ） */
+export const LEGACY_FILES_DIR = 'public/files/legacy';
 
 /** フォルダ以下のファイルを、フォルダからの相対パス（/ 区切り）で名前順に返す */
 export function listFiles(root: string): string[] {

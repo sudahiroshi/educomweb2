@@ -20,6 +20,8 @@ export interface ConvertContext {
    * 元の要素は変えず、書き換えた複製を返す。
    */
   rewriteLinks(el: Element, page: string, target: string): Element;
+  /** フロントマターの links の外部 URL を確かめる。切れていれば undefined（plan 9.7） */
+  resolveUrl(url: string, target: string): string | undefined;
 }
 
 export function readUtf8(page: string): Root {

@@ -44,6 +44,10 @@ function eventFile(ctx: ConvertContext, plan: EventPlan, item: Element | undefin
       ? findAll(item, 'a')
           .map((a) => ({ label: textOf(a), url: attr(a, 'href') ?? '' }))
           .filter((l) => /^https?:\/\//.test(l.url))
+          .flatMap((l) => {
+            const url = ctx.resolveUrl(l.url, path);
+            return url ? [{ ...l, url }] : [];
+          })
       : [];
   // 本文は top.html の項目からだけ作る。一覧の項目（国際会議など）は題名・日付・リンクだけなので本文にしない
   let body = plan.body ?? '';

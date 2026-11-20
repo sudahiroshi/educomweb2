@@ -1,0 +1,144 @@
+{
+  "http://acousticalsociety.org/content/5th-joint-meeting": {
+    "url": "http://acousticalsociety.org/content/5th-joint-meeting",
+    "status": 403,
+    "redirectedTo": "https://acousticalsociety.org/content/5th-joint-meeting"
+  },
+  "http://adlib.rsch.tuis.ac.jp/~akira/edu/meeting/00000.wmv": {
+    "url": "http://adlib.rsch.tuis.ac.jp/~akira/edu/meeting/00000.wmv",
+    "status": 200
+  },
+  "http://adlib.rsch.tuis.ac.jp/~akira/edu/meeting/00001.wmv": {
+    "url": "http://adlib.rsch.tuis.ac.jp/~akira/edu/meeting/00001.wmv",
+    "status": 200
+  },
+  "http://adlib.rsch.tuis.ac.jp/~akira/edu/meeting/00002.wmv": {
+    "url": "http://adlib.rsch.tuis.ac.jp/~akira/edu/meeting/00002.wmv",
+    "status": 200
+  },
+  "http://adlib.rsch.tuis.ac.jp/~akira/edu/meeting/00003.wmv": {
+    "url": "http://adlib.rsch.tuis.ac.jp/~akira/edu/meeting/00003.wmv",
+    "status": 200
+  },
+  "http://www.asj.gr.jp/": {
+    "url": "http://www.asj.gr.jp/",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/04_contents/2014_05.html": {
+    "url": "http://www.asj.gr.jp/journal/04_contents/2014_05.html",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum01.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum01.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum02.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum02.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum03.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum03.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum04.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum04.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum05.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum05.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum06.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum06.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum07.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum07.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum08.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum08.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum08eng.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum08eng.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum09.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum09.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum10.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum10.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum11.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum11.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum12.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum12.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum13.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum13.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum14.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum14.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum15.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum15.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum16.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum16.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.asj.gr.jp/journal/pdf/museum17.pdf": {
+    "url": "http://www.asj.gr.jp/journal/pdf/museum17.pdf",
+    "status": 200,
+    "redirectedTo": "https://acoustics.jp/"
+  },
+  "http://www.ica2013montreal.org/technical.html": {
+    "url": "http://www.ica2013montreal.org/technical.html",
+    "status": 200
+  },
+  "http://www.kahaku.go.jp/event/2011/07science/index.html": {
+    "url": "http://www.kahaku.go.jp/event/2011/07science/index.html",
+    "status": 200,
+    "redirectedTo": "https://www.kahaku.go.jp/plan/2011/07science/index.html"
+  },
+  "http://www.splab.ee.sophia.ac.jp/Vocal_Tract_Model/index-j.htm": {
+    "url": "http://www.splab.ee.sophia.ac.jp/Vocal_Tract_Model/index-j.htm",
+    "error": "getaddrinfo ENOTFOUND www.splab.ee.sophia.ac.jp"
+  },
+  "https://www.jstage.jst.go.jp/browse/ast/37/4/_contents": {
+    "url": "https://www.jstage.jst.go.jp/browse/ast/37/4/_contents",
+    "status": 200
+  },
+  "https://www.youtube.com/watch?v=E54oDZGAap0": {
+    "url": "https://www.youtube.com/watch?v=E54oDZGAap0",
+    "status": 200
+  }
+}
