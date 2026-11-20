@@ -11,6 +11,7 @@ import type { Element } from 'hast';
 import { Review } from './lib/review.ts';
 import { UTF8_DIR } from './lib/paths.ts';
 import { readUtf8, type ConvertContext, type GeneratedFile } from './convert/context.ts';
+import { convertCommittee } from './convert/committee.ts';
 import { convertNewsAndEvents } from './convert/news-events.ts';
 
 const MANIFEST = '.migrate/generated.json';
@@ -29,7 +30,19 @@ const ctx: ConvertContext = {
   rewriteLinks: (el: Element) => structuredClone(el),
 };
 
-const files: GeneratedFile[] = [...convertNewsAndEvents(ctx)];
+/** 日本時間の今日の年度（現在の名簿をどの年度まで書くか） */
+function currentFiscalYear(): number {
+  const [y, m] = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' })
+    .format(new Date())
+    .split('-')
+    .map(Number);
+  return (m ?? 1) >= 4 ? (y ?? 0) : (y ?? 0) - 1;
+}
+
+const files: GeneratedFile[] = [
+  ...convertNewsAndEvents(ctx),
+  ...convertCommittee(ctx, currentFiscalYear()),
+];
 
 const previous: string[] = existsSync(MANIFEST)
   ? (JSON.parse(readFileSync(MANIFEST, 'utf8')) as string[])
