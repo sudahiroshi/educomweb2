@@ -22,7 +22,8 @@
     "check:overflow": "node tools/dev/check-overflow.mjs",
     "check:events": "node tools/dev/check-event-status.mjs",
     "migrate:utf8": "node tools/migrate/to-utf8.ts",
-    "migrate:inventory": "node tools/migrate/inventory.ts"
+    "migrate:inventory": "node tools/migrate/inventory.ts",
+    "migrate:links": "node tools/migrate/links.ts"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.10",
