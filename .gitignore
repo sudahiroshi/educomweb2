@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # 日付を固定した確認用のビルド出力（plan 6.3）
 .test-dist/
+
+# 移行の作業用ファイル（plan 9.1。tools/migrate で再生成できる）
+.migrate/
