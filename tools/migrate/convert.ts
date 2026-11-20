@@ -15,6 +15,7 @@ import { PAGE_PLANS } from './mapping.ts';
 import { readUtf8, type ConvertContext, type GeneratedFile } from './convert/context.ts';
 import { convertCommittee } from './convert/committee.ts';
 import { convertNewsAndEvents } from './convert/news-events.ts';
+import { convertPages } from './convert/pages.ts';
 
 const MANIFEST = '.migrate/generated.json';
 
@@ -81,6 +82,7 @@ function currentFiscalYear(): number {
 const files: GeneratedFile[] = [
   ...convertNewsAndEvents(ctx),
   ...convertCommittee(ctx, currentFiscalYear()),
+  ...convertPages(ctx),
 ];
 
 const previous: string[] = existsSync(MANIFEST)
