@@ -29,7 +29,9 @@ export function SessionTable({
         const dateTime = formatSessionDateTime(session.date, session.startTime, session.endTime);
         const headingId = `${idPrefix}-${i + 1}`;
         return (
-          <section key={headingId} class="session" aria-labelledby={headingId}>
+          // 見出しで区切るだけにし、ランドマーク（region）にはしない。
+          // 同名のセッション（日を分けたポスターなど）や入力途中の空の名前で、同じ名前のランドマークが並ぶのを避ける
+          <section key={headingId} class="session">
             <Heading
               level={headingLevel}
               id={headingId}
