@@ -1,0 +1,90 @@
+# 記事・コードの変更ごとに、公開と同じ手順でビルドして確かめる（plan 10.4、spec 9.2）。
+# 公開そのものは Cloudflare の GitHub 連携が行う。ここでは失敗に気づけるようにする。
+# T-11 既定案: コミットした本人は GitHub のコミットの成否表示（✗）とメールで、
+#   管理者（リポジトリの所有者）は失敗時に作る Issue の割り当て通知（メール）で知る。
+name: ビルドの確認
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: ビルド（npm run build）
+        run: npm run build
+      - name: 全ページの点検（npm run check:pages）
+        run: npm run check:pages
+
+      - name: 失敗を管理者に知らせる（Issue を作るか、開いている Issue に追記する）
+        if: failure() && github.event_name == 'push'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const title = '【ビルド失敗】main のビルドが失敗しています';
+            const run = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const commit = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}`;
+            const body = [
+              `- 実行結果: ${run}`,
+              `- コミット: ${commit}`,
+              `- コミットした人: ${context.actor}`,
+              '',
+              '実行結果のログで、どの記事のどの項目が原因かを確認してください（手引き docs/manual.md「ビルドが失敗したとき」）。',
+              '直すと次のビルドで公開されます。それまでは直前の版が公開されたままです。',
+            ].join('\n');
+            const { data: open } = await github.rest.issues.listForRepo({
+              ...context.repo,
+              state: 'open',
+              creator: 'github-actions[bot]',
+              per_page: 100,
+            });
+            const existing = open.find((i) => i.title === title);
+            if (existing) {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: existing.number, body });
+            } else {
+              await github.rest.issues.create({
+                ...context.repo,
+                title,
+                body,
+                assignees: [context.repo.owner],
+              });
+            }
+
+      - name: 成功したら、開いている失敗の Issue を閉じる
+        if: success() && github.event_name == 'push'
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const title = '【ビルド失敗】main のビルドが失敗しています';
+            const { data: open } = await github.rest.issues.listForRepo({
+              ...context.repo,
+              state: 'open',
+              creator: 'github-actions[bot]',
+              per_page: 100,
+            });
+            for (const issue of open.filter((i) => i.title === title)) {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: issue.number,
+                body: `ビルドが成功しました（${context.sha.slice(0, 7)}）。`,
+              });
+              await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: 'closed' });
+            }
