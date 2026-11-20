@@ -40,16 +40,18 @@ describe('表示設定', () => {
       );
       return dataset;
     };
-    expect(run({}, false)).toEqual({ theme: 'light', fontSize: 'normal' });
-    expect(run({}, true)).toEqual({ theme: 'dark', fontSize: 'normal' });
+    expect(run({}, false)).toEqual({ theme: 'light', fontSize: 'normal', js: '' });
+    expect(run({}, true)).toEqual({ theme: 'dark', fontSize: 'normal', js: '' });
     expect(run({ [THEME_KEY]: 'light', [FONT_SIZE_KEY]: 'xlarge' }, true)).toEqual({
       theme: 'light',
       fontSize: 'xlarge',
+      js: '',
     });
     expect(run({ [THEME_KEY]: 'blue', [FONT_SIZE_KEY]: 'huge' }, true)).toEqual({
       theme: 'dark',
       fontSize: 'normal',
+      js: '',
     });
-    expect(run({}, true, true)).toEqual({ theme: 'dark', fontSize: 'normal' });
+    expect(run({}, true, true)).toEqual({ theme: 'dark', fontSize: 'normal', js: '' });
   });
 });

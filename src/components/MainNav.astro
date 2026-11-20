@@ -27,7 +27,7 @@ const menu = buildMenu(pageMenuLinks(pages));
     aria-expanded="false"
     aria-controls="main-nav-list"
     data-nav-toggle
-    hidden
+    data-js-only
   >
     <svg class="nav-toggle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="M4 7h16M4 12h16M4 17h16"></path>
@@ -45,14 +45,14 @@ const menu = buildMenu(pageMenuLinks(pages));
             aria-controls={`submenu-${index}`}
             data-current={currentState(item.basePath, currentPath) ? '' : undefined}
             data-submenu-toggle
-            hidden
+            data-js-only
           >
             {item.label}
             <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="M6 9l6 6 6-6" />
             </svg>
           </button>
-          <span class="submenu-label" data-submenu-label>
+          <span class="submenu-label" data-no-js-only>
             {item.label}
           </span>
           <ul class="submenu" id={`submenu-${index}`}>
@@ -86,8 +86,7 @@ const menu = buildMenu(pageMenuLinks(pages));
 
     const submenus = [...nav.querySelectorAll<HTMLElement>('[data-submenu]')].flatMap((item) => {
       const button = item.querySelector<HTMLButtonElement>('[data-submenu-toggle]');
-      const label = item.querySelector<HTMLElement>('[data-submenu-label]');
-      return button ? [{ item, button, label }] : [];
+      return button ? [{ item, button }] : [];
     });
 
     const setSubmenu = (button: HTMLButtonElement, open: boolean) => {
@@ -100,14 +99,6 @@ const menu = buildMenu(pageMenuLinks(pages));
       // 幅の狭い画面では、メニューを開いたときにサブメニューも入れ子で展開する
       if (open) submenus.forEach(({ button }) => setSubmenu(button, true));
     };
-
-    // スクリプトが動くときだけ、ボタンで開閉する形に切り替える
-    nav.dataset.enhanced = '';
-    toggle.hidden = false;
-    submenus.forEach(({ button, label }) => {
-      button.hidden = false;
-      if (label) label.hidden = true;
-    });
 
     toggle.addEventListener('click', () => {
       setMenu(toggle.getAttribute('aria-expanded') !== 'true');
@@ -262,14 +253,14 @@ const menu = buildMenu(pageMenuLinks(pages));
   }
 
   /* スクリプトが動かない環境：サブメニューは見出し付きの入れ子リストとして常に表示 */
-  .main-nav:not([data-enhanced]) .has-submenu {
+  :global(:root:not([data-js])) .main-nav .has-submenu {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.25rem;
   }
 
-  .main-nav:not([data-enhanced]) .submenu {
+  :global(:root:not([data-js])) .main-nav .submenu {
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
@@ -281,7 +272,7 @@ const menu = buildMenu(pageMenuLinks(pages));
       display: none;
     }
 
-    .main-nav[data-enhanced] .submenu {
+    :global(:root[data-js]) .main-nav .submenu {
       position: absolute;
       top: calc(100% + 0.4rem);
       left: 0;
@@ -295,14 +286,14 @@ const menu = buildMenu(pageMenuLinks(pages));
       box-shadow: 0 0.4rem 1rem color-mix(in srgb, var(--color-text) 12%, transparent);
     }
 
-    .main-nav[data-enhanced] .submenu-toggle[aria-expanded='true'] ~ .submenu {
+    :global(:root[data-js]) .main-nav .submenu-toggle[aria-expanded='true'] ~ .submenu {
       display: block;
     }
   }
 
   /* 幅 768px 未満：「メニュー」ボタンで全体を開閉、サブメニューは入れ子のリスト */
   @media (max-width: 767.98px) {
-    .main-nav[data-enhanced] .nav-list {
+    :global(:root[data-js]) .main-nav .nav-list {
       display: none;
       flex-direction: column;
       margin-top: 0.6rem;
@@ -312,29 +303,29 @@ const menu = buildMenu(pageMenuLinks(pages));
       background: var(--color-surface);
     }
 
-    .main-nav[data-enhanced] .nav-toggle[aria-expanded='true'] ~ .nav-list {
+    :global(:root[data-js]) .main-nav .nav-toggle[aria-expanded='true'] ~ .nav-list {
       display: flex;
     }
 
-    .main-nav[data-enhanced] .nav-list .pill {
+    :global(:root[data-js]) .main-nav .nav-list .pill {
       width: 100%;
       justify-content: space-between;
       border-color: transparent;
       border-radius: var(--radius-small);
     }
 
-    .main-nav[data-enhanced] .pill[aria-current],
-    .main-nav[data-enhanced] .submenu-toggle[data-current] {
+    :global(:root[data-js]) .main-nav .pill[aria-current],
+    :global(:root[data-js]) .main-nav .submenu-toggle[data-current] {
       border-color: var(--color-accent);
     }
 
-    .main-nav[data-enhanced] .submenu {
+    :global(:root[data-js]) .main-nav .submenu {
       display: none;
       margin-top: 0.25rem;
       padding-inline-start: 1rem;
     }
 
-    .main-nav[data-enhanced] .submenu-toggle[aria-expanded='true'] ~ .submenu {
+    :global(:root[data-js]) .main-nav .submenu-toggle[aria-expanded='true'] ~ .submenu {
       display: block;
     }
   }

@@ -7,7 +7,7 @@
 import { FONT_SIZES, FONT_SIZE_LABELS } from '../scripts/display-settings';
 ---
 
-<div class="font-size" role="group" aria-label="文字サイズ" data-font-size-switcher hidden>
+<div class="font-size" role="group" aria-label="文字サイズ" data-font-size-switcher data-js-only>
   <span class="label" aria-hidden="true">
     文字
   </span>
@@ -40,7 +40,6 @@ import { FONT_SIZES, FONT_SIZE_LABELS } from '../scripts/display-settings';
   }
 
   document.querySelectorAll<HTMLElement>('[data-font-size-switcher]').forEach((group) => {
-    group.hidden = false;
     group.querySelectorAll<HTMLButtonElement>('[data-font-size-value]').forEach((button) => {
       button.addEventListener('click', () => {
         const size = button.dataset.fontSizeValue;

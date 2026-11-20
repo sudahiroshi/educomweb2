@@ -46,7 +46,9 @@ export function writeStored(key: string, value: string): void {
 /**
  * <head> に入れる描画前のスクリプト（spec 5.1）。ちらつきを防ぐため、CSS より前に同期で実行する。
  * 保存値があればそれ、なければ OS の設定（prefers-color-scheme）に従う。
+ * あわせて <html data-js> を付け、スクリプトで動かす部品（メニューの開閉・表示設定のボタン）を最初から
+ * その形で描く（後から切り替えると本文がずれる。plan 11.5 の Lighthouse で CLS 0.48 だった）。
  */
 export const INIT_SCRIPT = `(function(){var d=document.documentElement,t=null,f=null;try{t=localStorage.getItem(${JSON.stringify(
   THEME_KEY,
-)});f=localStorage.getItem(${JSON.stringify(FONT_SIZE_KEY)})}catch(e){}if(t!=="light"&&t!=="dark"){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}d.dataset.theme=t;d.dataset.fontSize=f==="large"||f==="xlarge"?f:"normal"})();`;
+)});f=localStorage.getItem(${JSON.stringify(FONT_SIZE_KEY)})}catch(e){}if(t!=="light"&&t!=="dark"){t=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}d.dataset.theme=t;d.dataset.fontSize=f==="large"||f==="xlarge"?f:"normal";d.dataset.js=""})();`;

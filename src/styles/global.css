@@ -86,6 +86,15 @@ textarea {
   color: inherit;
 }
 
+/*
+ * スクリプトが動く環境だけで出す部品／動かない環境だけで出す部品。
+ * <html data-js> は描画前のスクリプト（src/scripts/display-settings.ts）が付ける。
+ */
+:root:not([data-js]) [data-js-only],
+:root[data-js] [data-no-js-only] {
+  display: none !important;
+}
+
 /* フォーカス枠は常に見えるようにする（spec 8章） */
 :focus-visible,
 /* 日付・時刻の欄は、中のカレンダーボタンに Tab で移ると :focus・:focus-visible が外れるため、:focus-within で枠を出す */

@@ -11,7 +11,7 @@
   type="button"
   class="theme-toggle"
   data-theme-toggle
-  hidden
+  data-js-only
   aria-label="ダークモードに切り替え"
 >
   <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -52,7 +52,6 @@
   }
 
   document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((button) => {
-    button.hidden = false;
     button.addEventListener('click', () => {
       const next: Theme = currentTheme() === 'dark' ? 'light' : 'dark';
       writeStored(THEME_KEY, next);
