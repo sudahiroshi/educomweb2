@@ -22,6 +22,8 @@ export interface PagePlan {
   estimate: string;
   destination: Destination;
   note?: string;
+  /** 変換後に人が確かめること（要確認リストに載せる） */
+  reviewNote?: string;
 }
 
 /** ページ単位の移行先（案）。legacy/ にない、リンク先だけのページも含む */
@@ -109,6 +111,8 @@ export const PAGE_PLANS: readonly PagePlan[] = [
     path: 'doc/q_and_a.html',
     estimate: '音響に関する質問と答え',
     destination: { to: 'pages', slug: 'q-and-a', showInMenu: false },
+    reviewNote:
+      '答えの PDF（loudspeaker.pdf）がなく、「上記2つの質問への答え」が文字だけ残っている。行を消すか、ページごと破棄するかを判断',
     note: '答えの PDF がない',
   },
   {
@@ -120,6 +124,8 @@ export const PAGE_PLANS: readonly PagePlan[] = [
     path: 'demo/index.html',
     estimate: '音教材とその実演（3件、リンク先はファイルなし）',
     destination: { to: 'pages', slug: 'demo', showInMenu: false },
+    reviewNote:
+      '3件とも紹介ページ（arai/・iwamiya/・kawai/）がなく、題名と紹介者だけが残っている。現在の公開先があればリンクを追加',
   },
   ...[
     'demo/arai/asj_demo_arai.htm',
@@ -135,16 +141,22 @@ export const PAGE_PLANS: readonly PagePlan[] = [
     path: 'demo/links.html',
     estimate: '音響教育の実践リンク',
     destination: { to: 'pages', slug: 'links', showInMenu: false },
+    reviewNote:
+      '「声道模型」のリンク先のサーバー（www.splab.ee.sophia.ac.jp）がない。現在の URL があれば追加',
   },
   {
     path: 'museum/article/index.html',
     estimate: '「音の博物館」連載記事へのリンク（17件）',
     destination: { to: 'pages', slug: 'museum-article', showInMenu: false },
+    reviewNote:
+      '記事の PDF が学会サイトから消えており、17件ともリンクを外した。前文の「記事へのリンクを公開しています」と食い違うので、文を直すか、ページごと破棄するかを判断',
   },
   {
     path: 'museum/science/index.html',
     estimate: 'サイエンススクエア（国立科学博物館）の展示資料（PDF 2件、ファイルなし）',
     destination: { to: 'pages', slug: 'science-square', showInMenu: false },
+    reviewNote:
+      '資料の PDF 2件（girigari.pdf・ScienceSquare2011-voice.pdf）がない。前文の「資料を公開しています」と食い違うので、文を直すか、ページごと破棄するかを判断',
   },
 ];
 

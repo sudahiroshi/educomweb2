@@ -152,6 +152,7 @@ export function convertPages(ctx: ConvertContext): GeneratedFile[] {
   for (const plan of PAGE_PLANS) {
     if (plan.destination.to !== 'pages') continue;
     const { slug, showInMenu } = plan.destination;
+    if (plan.reviewNote) ctx.review.add(pagePath(slug), plan.reviewNote);
     out.push(
       plan.path === 'plan/kaisaikiroku.html'
         ? historyPage(ctx, slug)

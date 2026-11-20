@@ -8,8 +8,15 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { Review } from './lib/review.ts';
+import { reviewMarkdown } from './lib/review-markdown.ts';
 import type { LinkStatus } from './lib/link-check.ts';
-import { LEGACY_DIR, LEGACY_FILES_DIR, LINK_STATUS_FILE, UTF8_DIR } from './lib/paths.ts';
+import {
+  LEGACY_DIR,
+  LEGACY_FILES_DIR,
+  LINK_STATUS_FILE,
+  MIGRATION_DOCS_DIR,
+  UTF8_DIR,
+} from './lib/paths.ts';
 import { decideExternal, rewriteLinks, type RewriteOptions } from './lib/rewrite-links.ts';
 import { PAGE_PLANS } from './mapping.ts';
 import { readUtf8, type ConvertContext, type GeneratedFile } from './convert/context.ts';
@@ -101,6 +108,8 @@ const copied = [...copiedAttachments].sort().map((path) => {
   return dest;
 });
 writeFileSync(MANIFEST, JSON.stringify([...files.map((f) => f.path), ...copied], null, 2));
+
+writeFileSync(join(MIGRATION_DOCS_DIR, 'review.md'), reviewMarkdown(review.items));
 
 console.log(files.map((f) => f.path).join('\n'));
 console.log(

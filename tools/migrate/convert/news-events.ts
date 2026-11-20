@@ -52,7 +52,14 @@ function eventFile(ctx: ConvertContext, plan: EventPlan, item: Element | undefin
   // 本文は top.html の項目からだけ作る。一覧の項目（国際会議など）は題名・日付・リンクだけなので本文にしない
   let body = plan.body ?? '';
   if (!plan.body && item && plan.source === 'top.html') {
-    const source = plan.slug === 'workshop-listening-program' ? workshopBody(item) : item;
+    const isWorkshop = plan.slug === 'workshop-listening-program';
+    const source = isWorkshop ? workshopBody(item) : item;
+    if (isWorkshop) {
+      ctx.review.add(
+        path,
+        '資料販売の案内（終了済み）と連絡先のメールアドレスは載せていない。「簡易プログラム」「概要つきプログラム」はリンク先がなく文字だけ残っている',
+      );
+    }
     body = elementToMarkdown(ctx.rewriteLinks(source, plan.source, path));
   }
   if (plan.dateNote) ctx.review.add(path, `開催日：${plan.dateNote}`);
