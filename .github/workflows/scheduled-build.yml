@@ -1,8 +1,8 @@
 # 毎日1回の定期ビルド（plan 10.3、spec 9.2）。開催予定→終了の切り替えと年度別ページの更新のため。
 # 先に同じ手順でビルドできることを確かめてから、Cloudflare のデプロイフックを呼んで本番をビルドし直す。
 # デプロイフックの URL は秘密情報なので、リポジトリの Secrets（CLOUDFLARE_DEPLOY_HOOK_URL）に入れる。
-# 公開は Cloudflare Workers（静的アセット。設定は wrangler.jsonc）。
-# デプロイフックは Worker の Settings → Builds → Deploy hooks で、ブランチ main に対して作る。
+# 公開は Cloudflare Pages（GitHub 連携。ビルドコマンド npm run build、出力 dist）。
+# デプロイフックは Pages のプロジェクトの Settings → Builds → Deploy hooks で、ブランチ main に対して作る。
 # 失敗は build.yml と同じく Issue で管理者に知らせる（T-11 既定案）。
 name: 定期ビルド
 

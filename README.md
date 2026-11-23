@@ -85,8 +85,7 @@ npm run preview   # http://localhost:4321/ でビルド結果を表示
 ├─ legacy/                旧サイトの HTML（移行の入力。編集しない。ビルド対象外）
 ├─ docs/                  仕様・計画・手引き・デザイン案・移行の記録
 ├─ .github/workflows/     build.yml（push ごとのビルド確認）、scheduled-build.yml（毎日の定期ビルド）
-├─ .nvmrc                 Node.js の版
-└─ wrangler.jsonc         Cloudflare Workers（テスト用の公開先）の設定
+└─ .nvmrc                 Node.js の版
 ```
 
 ### 大事な決まり
@@ -137,7 +136,8 @@ npm run preview   # http://localhost:4321/ でビルド結果を表示
 ## 公開の仕組み
 
 - `main` に push すると、Cloudflare が `npm run build` でビルドして公開します。ビルドが失敗したときは公開されず、前の版が残ります。
-  - 今は、テスト用の公開先として Cloudflare Workers（`wrangler.jsonc`）を使っています。本番の公開先は別に決めます（plan 13章）。
+  - 今は、テスト用の公開先として Cloudflare Pages（<https://educomweb2.pages.dev/>）を使っています。本番の公開先は別に決めます（plan 13章）。
+  - Pages の設定（Cloudflare の画面）：本番ブランチ `main`、ビルドコマンド `npm run build`、出力ディレクトリ `dist`、環境変数 `NODE_VERSION`（`.nvmrc` と同じ版）。404 ページ（`dist/404.html`）と末尾のスラッシュは Pages が自動で扱うので、設定ファイルは置いていません。
 - GitHub Actions：
   - `build.yml`：push ごとに、ビルドと全ページの点検（`check:pages`）をします。`main` で失敗すると「【ビルド失敗】」の Issue を作って管理者に割り当て、次に成功すると閉じます。
   - `scheduled-build.yml`：毎日 0:10（日本時間）に、ビルドできることを確かめてから、Secrets の `CLOUDFLARE_DEPLOY_HOOK_URL` を呼んで本番をビルドし直します（開催予定から終了への切り替えと、年度別ページの更新のため）。60日間リポジトリに変更がないと GitHub が止めるので、そのときは Actions の画面で再開します。
