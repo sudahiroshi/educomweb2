@@ -10,6 +10,7 @@ export const KIND_LABELS: Record<EventKind, { full: string; short: string }> = {
   asj: { full: '音響学会研究発表会', short: '研究発表会' },
   cosponsored: { full: '共催研究発表会', short: '共催研究発表会' },
   international: { full: '国際会議', short: '国際会議' },
+  media: { full: 'メディア出演', short: 'メディア出演' },
 };
 
 /** 研究発表会3種（/meetings/{kind}/ に置く種類。D-30） */
@@ -20,9 +21,15 @@ export const MEETING_KINDS = [
 ] as const satisfies readonly EventKind[];
 export type MeetingKind = (typeof MEETING_KINDS)[number];
 
-/** 種類ごとの一覧ページの URL（活動記録は /activities/、ほかは /meetings/{kind}/） */
+/** 研究発表会3種以外で、自分の一覧ページを持つ種類と、その URL */
+const OWN_LIST_URLS: Partial<Record<EventKind, string>> = {
+  activity: '/activities/',
+  media: '/media/',
+};
+
+/** 種類ごとの一覧ページの URL（活動記録は /activities/、メディア出演は /media/、ほかは /meetings/{kind}/） */
 export function kindListUrl(kind: EventKind): string {
-  return kind === 'activity' ? '/activities/' : `/meetings/${kind}/`;
+  return OWN_LIST_URLS[kind] ?? `/meetings/${kind}/`;
 }
 
 /** 種類ごとの一覧ページの名前 */

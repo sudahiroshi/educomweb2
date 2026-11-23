@@ -9,6 +9,7 @@ import { dateSchema, optionalText, requiredText } from './common';
 export const RESERVED_PAGE_SLUGS = [
   'news',
   'activities',
+  'media',
   'meetings',
   'committee',
   'search',

@@ -4,6 +4,7 @@
  */
 import { isDateValue, isTimeValue } from '../schemas';
 import type { ContentIndex } from './content-index';
+import { isEventKind } from './kinds';
 import type { Draft } from './model';
 
 const date = (v: string) => (isDateValue(v) ? v : undefined);
@@ -17,13 +18,7 @@ export function previewEvent(draft: Draft) {
   return {
     startDate,
     data: {
-      kind:
-        draft.kind === 'activity' ||
-        draft.kind === 'asj' ||
-        draft.kind === 'cosponsored' ||
-        draft.kind === 'international'
-          ? draft.kind
-          : 'activity',
+      kind: isEventKind(draft.kind) ? draft.kind : 'activity',
       title: text(e.title) ?? '（タイトル）',
       startDate: startDate ?? '',
       endDate,

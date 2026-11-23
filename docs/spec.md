@@ -109,11 +109,11 @@ link: z.object({
 
 `related` は Astro の `reference('events')` で定義し、存在しないIDならビルドを失敗させる。
 
-### 2.5 `events`（活動記録・研究発表会・国際会議）
+### 2.5 `events`（活動記録・研究発表会・国際会議・メディア出演）
 
 | 項目 | キー | 型 | 必須 | 説明 |
 |---|---|---|---|---|
-| 種類 | `kind` | `activity` \| `asj` \| `cosponsored` \| `international` | ○ | 活動記録／音響学会研究発表会／共催研究発表会／国際会議 |
+| 種類 | `kind` | `activity` \| `asj` \| `cosponsored` \| `international` \| `media` | ○ | 活動記録／音響学会研究発表会／共催研究発表会／国際会議／メディア出演（D-56） |
 | タイトル | `title` | string | ○ | |
 | 掲載日 | `published` | date | ○ | （D-11） |
 | 更新日 | `updated` | date | | |
@@ -207,7 +207,7 @@ sessions:
 | 更新日 | `updated` | date | | |
 | 本文 | （Markdown本文） | | ○ | |
 
-スラッグはシステムが使うパス（`news`, `activities`, `meetings`, `committee`, `search`, `editor`, `files`, `rss.xml` など）と重複してはならない（ビルド時に検査）。
+スラッグはシステムが使うパス（`news`, `activities`, `media`, `meetings`, `committee`, `search`, `editor`, `files`, `rss.xml` など）と重複してはならない（ビルド時に検査）。
 
 ### 2.8 画像・添付ファイル
 
@@ -297,7 +297,9 @@ sessions:
 | 同（年度別） | `/meetings/asj/fy/{年度}/` | |
 | 共催研究発表会 | `/meetings/cosponsored/`、`…/fy/{年度}/` | 同上 |
 | 国際会議 | `/meetings/international/`、`…/fy/{年度}/` | 同上 |
+| メディア出演 | `/media/`、`/media/fy/{年度}/` | 構成は活動記録と同じ（D-56） |
 | 記事詳細（活動） | `/activities/{id}/` | `kind: activity` |
+| 記事詳細（メディア出演） | `/media/{id}/` | `kind: media` |
 | 記事詳細（研究発表会等） | `/meetings/{kind}/{id}/` | 種類ラベル、開催日、会場、外部リンク、セッション表、本文、掲載日・更新日 |
 | 運営委員 | `/committee/` | 最新年度の名簿＋過去年度へのリンク（D-28） |
 | 運営委員（年度別） | `/committee/{年度}/` | |
@@ -319,9 +321,10 @@ sessions:
 
 1. お知らせ
 2. 活動記録
-3. 研究発表会・国際会議 ▾（サブメニュー：音響学会研究発表会／共催研究発表会／国際会議）
-4. 運営委員
-5. その他のページ（`pages` のうち `showInMenu: true` を `menuOrder` 順）
+3. メディア出演（D-56）
+4. 研究発表会・国際会議 ▾（サブメニュー：音響学会研究発表会／共催研究発表会／国際会議）
+5. 運営委員
+6. その他のページ（`pages` のうち `showInMenu: true` を `menuOrder` 順）
 
 - サブメニューはボタンで開閉し、`aria-expanded` を切り替える。Esc で閉じ、フォーカスをボタンに戻す。メニュー外クリックで閉じる。
 - 幅 768px 未満では、メニュー全体を「メニュー」ボタンで開閉する折りたたみ表示にする。サブメニューは入れ子のリストとして展開する。
@@ -438,7 +441,7 @@ CSS カスタムプロパティとして `:root` に定義し、ダークは `[d
 ### 6.2 画面構成
 
 ```
-┌ 種類の選択：お知らせ／活動記録／音響学会研究発表会／共催研究発表会／国際会議／運営委員／その他のページ
+┌ 種類の選択：お知らせ／活動記録／メディア出演／音響学会研究発表会／共催研究発表会／国際会議／運営委員／その他のページ
 ├ 操作：新規作成｜.mdを読み込む｜下書きを消去
 ├──────────────────────┬──────────────────────┤
 │ 入力フォーム（種類ごと）   │ プレビュー（本番と同じ見た目）│
@@ -590,7 +593,7 @@ JIS X 8341-3:2016 の適合レベル AA 相当を目標とする。主な要件�
 │  ├─ layouts/
 │  ├─ pages/
 │  │  ├─ index.astro
-│  │  ├─ news/ activities/ meetings/ committee/
+│  │  ├─ news/ activities/ media/ meetings/ committee/
 │  │  ├─ [slug].astro         # その他のページ
 │  │  ├─ search.astro
 │  │  ├─ rss.xml.ts

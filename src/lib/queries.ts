@@ -22,7 +22,7 @@ export async function loadNews() {
 }
 
 /** 一覧の対象：'activities'（活動記録に載る記事）または種類 */
-export type EventListTarget = 'activities' | MeetingKind;
+export type EventListTarget = 'activities' | MeetingKind | 'media';
 
 export async function loadEvents(target: EventListTarget) {
   const all = await getCollection('events');

@@ -1,6 +1,7 @@
 /**
  * メインメニューの項目（spec 4.3、D-29〜D-31）。
  * 固定項目（お知らせ〜運営委員）の後ろに、その他のページを並べる。
+ * 「メディア出演」は活動記録の次（ユーザー判断で追加）。
  */
 import type { PageData } from '../schemas';
 
@@ -36,6 +37,7 @@ export const MEETING_MENU: MenuGroup = {
 const FIXED_BEFORE: MenuLink[] = [
   { label: 'お知らせ', href: '/news/' },
   { label: '活動記録', href: '/activities/' },
+  { label: 'メディア出演', href: '/media/' },
 ];
 const FIXED_AFTER: MenuLink[] = [{ label: '運営委員', href: '/committee/' }];
 

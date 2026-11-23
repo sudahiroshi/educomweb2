@@ -34,6 +34,7 @@ describe('メニュー項目', () => {
     expect(menu.map((m) => m.label)).toEqual([
       'お知らせ',
       '活動記録',
+      'メディア出演',
       '研究発表会・国際会議',
       '運営委員',
       '委員会について',
@@ -41,7 +42,7 @@ describe('メニュー項目', () => {
       'A短縮',
       'B',
     ]);
-    const group = menu[2];
+    const group = menu[3];
     expect(group && isMenuGroup(group) && group.children.map((c) => c.href)).toEqual([
       '/meetings/asj/',
       '/meetings/cosponsored/',

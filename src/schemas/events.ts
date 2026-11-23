@@ -11,8 +11,8 @@ import {
   timeSchema,
 } from './common';
 
-/** 種類（D-13）。表示ラベルは src/lib 側で持つ（T-07） */
-export const EVENT_KINDS = ['activity', 'asj', 'cosponsored', 'international' , 'media'] as const;
+/** 種類（D-13）。表示ラベルは src/lib 側で持つ（T-07）。media（メディア出演）はユーザー判断で追加 */
+export const EVENT_KINDS = ['activity', 'asj', 'cosponsored', 'international', 'media'] as const;
 export type EventKind = (typeof EVENT_KINDS)[number];
 
 /** 講演（spec 2.5 talk） */

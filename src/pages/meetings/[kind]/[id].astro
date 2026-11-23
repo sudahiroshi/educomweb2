@@ -3,9 +3,12 @@
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import EventDetail from '../../../components/EventDetail.astro';
+import { MEETING_KINDS } from '../../../lib/event-kind';
 
 export const getStaticPaths = (async () => {
-  const events = await getCollection('events', (e) => e.data.kind !== 'activity');
+  const events = await getCollection('events', (e) =>
+    (MEETING_KINDS as readonly string[]).includes(e.data.kind),
+  );
   return events.map((entry) => ({
     params: { kind: entry.data.kind, id: entry.id },
     props: { entry },

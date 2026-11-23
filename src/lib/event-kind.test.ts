@@ -17,10 +17,14 @@ describe('種類ごとの表示名と URL', () => {
       '/meetings/asj/2027-03-09-b/',
     );
     expect(kindFiscalYearUrl('international', 2025)).toBe('/meetings/international/fy/2025/');
+    expect(kindListUrl('media')).toBe('/media/');
+    expect(eventUrl({ id: '2024-09-14-c', data: { kind: 'media' } })).toBe('/media/2024-09-14-c/');
+    expect(kindFiscalYearUrl('media', 2024)).toBe('/media/fy/2024/');
   });
 
   test('一覧ページの名前', () => {
     expect(kindListTitle('activity')).toBe('活動記録');
     expect(kindListTitle('asj')).toBe('音響学会研究発表会');
+    expect(kindListTitle('media')).toBe('メディア出演');
   });
 });
