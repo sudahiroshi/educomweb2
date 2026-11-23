@@ -2,20 +2,21 @@
  * 記事詳細（活動記録・研究発表会・国際会議）の本文より前の部分（spec 4.1）：
  * 開催日・会場、外部リンク、セッション表（プログラム）。サイトと編集画面のプレビューで共有する。
  */
+import { eventDateLabel } from '../../lib/event-kind';
 import { formatEventDate } from '../../lib/format-date';
 import type { EventData } from '../../schemas';
 import { Heading, type HeadingLevel, nextLevel } from './heading';
 import { LinkList } from './LinkList';
 import { SessionTable } from './SessionTable';
 
-type Data = Pick<EventData, 'startDate' | 'endDate' | 'venue' | 'links' | 'sessions'>;
+type Data = Pick<EventData, 'kind' | 'startDate' | 'endDate' | 'venue' | 'links' | 'sessions'>;
 
-/** 開催日・会場 */
+/** 開催日（メディア出演は掲載日・放送日）・会場 */
 export function EventInfo({ data }: { data: Data }) {
   return (
     <dl class="event-info">
       <div>
-        <dt>開催日</dt>
+        <dt>{eventDateLabel(data.kind)}</dt>
         <dd>
           <time dateTime={data.startDate}>{formatEventDate(data.startDate, data.endDate)}</time>
         </dd>

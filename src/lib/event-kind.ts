@@ -13,6 +13,18 @@ export const KIND_LABELS: Record<EventKind, { full: string; short: string }> = {
   media: { full: 'メディア出演', short: 'メディア出演' },
 };
 
+/** 日付の見出し（記事詳細・プレビュー）。メディア出演は「掲載日・放送日」（ユーザー判断） */
+export function eventDateLabel(kind: EventKind): string {
+  return kind === 'media' ? '掲載日・放送日' : '開催日';
+}
+
+/** 一覧ページの「開催予定」欄の見出しと、0件のときの文 */
+export function upcomingTexts(kind: EventKind | undefined): { title: string; empty: string } {
+  return kind === 'media'
+    ? { title: '掲載・放送予定', empty: '現在予定されている掲載・放送はありません。' }
+    : { title: '開催予定', empty: '現在予定されている開催はありません。' };
+}
+
 /** 研究発表会3種（/meetings/{kind}/ に置く種類。D-30） */
 export const MEETING_KINDS = [
   'asj',

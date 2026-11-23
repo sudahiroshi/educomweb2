@@ -7,6 +7,8 @@
  */
 import type { PartitionedEvents } from '../lib/event-status';
 import type { EventEntry } from '../lib/queries';
+import type { EventKind } from '../schemas';
+import { upcomingTexts } from '../lib/event-kind';
 import { listingFiscalYear } from '../lib/event-status';
 import { fiscalYearOf, formatFiscalYear } from '../lib/fiscal-year';
 import { buildToday } from '../lib/queries';
@@ -25,9 +27,12 @@ interface Props {
   showKind?: boolean;
   /** 年度リンク一覧の名前（読み上げ用） */
   navLabel: string;
+  /** 1種類だけの一覧なら、その種類（開催予定欄の文言を変える。活動記録では省略） */
+  kind?: EventKind;
 }
 
-const { events, fiscalYear, hrefFor, showKind = false, navLabel } = Astro.props;
+const { events, fiscalYear, hrefFor, showKind = false, navLabel, kind } = Astro.props;
+const upcoming = upcomingTexts(kind);
 const isIndex = fiscalYear === undefined;
 const shownYear = isIndex
   ? listingFiscalYear(events.endedFiscalYears, fiscalYearOf(buildToday))
@@ -38,7 +43,7 @@ const ended = shownYear === undefined ? [] : (events.endedByFiscalYear.get(shown
 {isIndex && (
   <section aria-labelledby="upcoming-title" data-upcoming-section>
     <h2 id="upcoming-title" class="section-title">
-      開催予定
+      {upcoming.title}
     </h2>
     {events.upcoming.length > 0 && (
       <ul class="card-grid" data-upcoming-list>
@@ -54,7 +59,7 @@ const ended = shownYear === undefined ? [] : (events.endedByFiscalYear.get(shown
       </ul>
     )}
     <p class="empty" data-upcoming-empty hidden={events.upcoming.length > 0}>
-      現在予定されている開催はありません。
+      {upcoming.empty}
     </p>
   </section>
 )}

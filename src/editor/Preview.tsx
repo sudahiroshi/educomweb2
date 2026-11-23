@@ -18,6 +18,7 @@ import { formatFiscalYear } from '../lib/fiscal-year';
 import { textLang } from '../lib/lang';
 import { renderMarkdown } from '../lib/markdown/render';
 import type { ContentIndex } from './content-index';
+import { eventDateLabel } from '../lib/event-kind';
 import { isEventKind } from './kinds';
 import type { Draft } from './model';
 import { previewDate, previewEvent, previewRelated, previewText } from './preview-data';
@@ -145,7 +146,7 @@ export function Preview({
         {startDate ? (
           <EventInfo data={data} />
         ) : (
-          <p class="ed-muted">開始日を入力すると、開催日が表示されます。</p>
+          <p class="ed-muted">開始日を入力すると、{eventDateLabel(data.kind)}が表示されます。</p>
         )}
         <EventLinks data={data} headingLevel={4} idPrefix="pv-" />
         <EventProgram data={data} headingLevel={4} idPrefix="pv-" />

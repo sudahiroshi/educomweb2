@@ -88,7 +88,7 @@ export function KindForm({
         <div class="ed-grid">
           <TextField
             path="startDate"
-            label="開始日"
+            label={kind === 'media' ? '開始日（掲載日・放送日）' : '開始日'}
             required
             type="date"
             value={e.startDate}
@@ -100,7 +100,7 @@ export function KindForm({
             type="date"
             value={e.endDate}
             onInput={(v) => set({ endDate: v })}
-            hint="1日開催なら空欄"
+            hint={kind === 'media' ? '1日だけなら空欄' : '1日開催なら空欄'}
           />
           <TextField
             path="published"

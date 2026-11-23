@@ -1,5 +1,13 @@
 import { describe, expect, test } from 'vitest';
-import { eventUrl, KIND_LABELS, kindFiscalYearUrl, kindListTitle, kindListUrl } from './event-kind';
+import {
+  eventDateLabel,
+  eventUrl,
+  KIND_LABELS,
+  kindFiscalYearUrl,
+  kindListTitle,
+  kindListUrl,
+  upcomingTexts,
+} from './event-kind';
 
 describe('種類ごとの表示名と URL', () => {
   test('ラベル（T-07 既定案）', () => {
@@ -26,5 +34,15 @@ describe('種類ごとの表示名と URL', () => {
     expect(kindListTitle('activity')).toBe('活動記録');
     expect(kindListTitle('asj')).toBe('音響学会研究発表会');
     expect(kindListTitle('media')).toBe('メディア出演');
+  });
+
+  test('日付の見出しと開催予定欄の文言（メディア出演は掲載・放送）', () => {
+    expect(eventDateLabel('asj')).toBe('開催日');
+    expect(eventDateLabel('media')).toBe('掲載日・放送日');
+    expect(upcomingTexts(undefined).title).toBe('開催予定');
+    expect(upcomingTexts('media')).toEqual({
+      title: '掲載・放送予定',
+      empty: '現在予定されている掲載・放送はありません。',
+    });
   });
 });
